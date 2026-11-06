@@ -16,6 +16,7 @@ import { CvAttachment } from "./cv-attachment";
 import { MatchScore } from "./match-score";
 import { RecruitingApplication } from "./recruiting-application";
 import { CandidateApplication } from "./candidate-application";
+import { AnswersEditor, finalizeAnswers, newAnswer, uncoveredRequirements } from "./answers-editor";
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -240,6 +241,12 @@ export function ApplyPage() {
   const notes = draft?.notes ?? "";
   const generated = draft?.generated ?? "";
   const [answer, setAnswer] = useState(draft?.answer ?? "");
+  const requirements = job?.requirements ?? [];
+  const [answers, setAnswers] = useState(() =>
+    draft?.answers?.length
+      ? draft.answers.map((a) => ({ ...a, requirementIds: a.requirementIds ?? [] }))
+      : [newAnswer(requirements.map((r) => r.id))],
+  );
   const [consent, setConsent] = useState(false);
   const [message, setMessage] = useState("");
   const [attempted, setAttempted] = useState(false);
@@ -254,8 +261,12 @@ export function ApplyPage() {
     const timeout = window.setTimeout(() => navigate("/app/aplikacje?wyslano=1"), delay);
     return () => window.clearTimeout(timeout);
   }, [submitted, navigate]);
-  const answerLength = answer.trim().length;
-  const answerInvalid = attempted && answerLength < MIN_APPLICATION_ANSWER_LENGTH;
+  const withRequirements = requirements.length > 0;
+  const answerLength = withRequirements
+    ? finalizeAnswers(answers).reduce((n, a) => n + a.text.length, 0)
+    : answer.trim().length;
+  const answerInvalid =
+    !withRequirements && attempted && answerLength < MIN_APPLICATION_ANSWER_LENGTH;
   const consentInvalid = attempted && !consent;
   if (!job) return <NotFound />;
   const existing = state.applications.find(
@@ -274,7 +285,24 @@ export function ApplyPage() {
     e.preventDefault();
     if (submittedOnce.current) return;
     setAttempted(true);
-    if (answerLength < MIN_APPLICATION_ANSWER_LENGTH) {
+    if (withRequirements) {
+      const ready = finalizeAnswers(answers);
+      if (
+        !ready.length ||
+        answers.some(
+          (a) =>
+            a.text.trim().length < MIN_APPLICATION_ANSWER_LENGTH || a.requirementIds.length === 0,
+        ) ||
+        uncoveredRequirements(requirements, answers).length
+      ) {
+        document
+          .querySelector<HTMLElement>(
+            ".answers-editor [aria-invalid], .answers-editor [role=alert]",
+          )
+          ?.focus();
+        return;
+      }
+    } else if (answerLength < MIN_APPLICATION_ANSWER_LENGTH) {
       answerInput.current?.focus();
       return;
     }
@@ -282,7 +310,18 @@ export function ApplyPage() {
       document.getElementById("application-consent")?.focus();
       return;
     }
-    if (run({ type: "submit", jobId: job!.id, notes, generated, answer, consent })) {
+    const ready = withRequirements ? finalizeAnswers(answers) : undefined;
+    if (
+      run({
+        type: "submit",
+        jobId: job!.id,
+        notes,
+        generated,
+        answer: ready ? ready.map((a) => a.text).join("\n\n") : answer,
+        consent,
+        answers: ready,
+      })
+    ) {
       submittedOnce.current = true;
       setSubmitted(true);
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -323,36 +362,49 @@ export function ApplyPage() {
               contextLabel="CV z Twojego profilu"
             />
           </section>
-          <section
-            className="application-form-section application-answer"
-            aria-label="Odpowiedź do aplikacji"
-          >
-            <Field label="Dlaczego pasujesz do tej roli?">
-              <Textarea
-                disabled={submitted}
-                ref={answerInput}
-                required
-                minLength={MIN_APPLICATION_ANSWER_LENGTH}
-                maxLength={12000}
-                aria-invalid={answerInvalid || undefined}
-                aria-describedby="application-answer-help"
-                value={answer}
-                onChange={(e) => {
-                  setAnswer(e.target.value);
-                  setConsent(false);
-                }}
-              />
-            </Field>
-            <p
-              id="application-answer-help"
-              role={answerInvalid ? "alert" : undefined}
-              className={answerInvalid ? "error-message" : "text-sm text-muted-foreground"}
+          {withRequirements ? (
+            <AnswersEditor
+              requirements={requirements}
+              value={answers}
+              onChange={(next) => {
+                setAnswers(next);
+                setConsent(false);
+              }}
+              disabled={submitted}
+              attempted={attempted}
+            />
+          ) : (
+            <section
+              className="application-form-section application-answer"
+              aria-label="Odpowiedź do aplikacji"
             >
-              {answerInvalid
-                ? `Odpowiedź jest za krótka. Wpisz co najmniej ${MIN_APPLICATION_ANSWER_LENGTH} znaków (obecnie: ${answerLength}).`
-                : `Minimum ${MIN_APPLICATION_ANSWER_LENGTH} znaków. Obecnie: ${answerLength}.`}
-            </p>
-          </section>
+              <Field label="Dlaczego pasujesz do tej roli?">
+                <Textarea
+                  disabled={submitted}
+                  ref={answerInput}
+                  required
+                  minLength={MIN_APPLICATION_ANSWER_LENGTH}
+                  maxLength={12000}
+                  aria-invalid={answerInvalid || undefined}
+                  aria-describedby="application-answer-help"
+                  value={answer}
+                  onChange={(e) => {
+                    setAnswer(e.target.value);
+                    setConsent(false);
+                  }}
+                />
+              </Field>
+              <p
+                id="application-answer-help"
+                role={answerInvalid ? "alert" : undefined}
+                className={answerInvalid ? "error-message" : "text-sm text-muted-foreground"}
+              >
+                {answerInvalid
+                  ? `Odpowiedź jest za krótka. Wpisz co najmniej ${MIN_APPLICATION_ANSWER_LENGTH} znaków (obecnie: ${answerLength}).`
+                  : `Minimum ${MIN_APPLICATION_ANSWER_LENGTH} znaków. Obecnie: ${answerLength}.`}
+              </p>
+            </section>
+          )}
           <div className="application-form-section application-submit">
             <label className="application-consent">
               <Checkbox
@@ -388,7 +440,16 @@ export function ApplyPage() {
                 disabled={submitted}
                 variant="outline"
                 onClick={() => {
-                  if (run({ type: "draft", jobId: job.id, notes, generated, answer }))
+                  if (
+                    run({
+                      type: "draft",
+                      jobId: job.id,
+                      notes,
+                      generated,
+                      answer,
+                      answers: withRequirements ? answers : undefined,
+                    })
+                  )
                     setMessage("Szkic został zapisany.");
                 }}
               >

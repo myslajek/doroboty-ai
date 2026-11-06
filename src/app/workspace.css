@@ -1126,3 +1126,57 @@ code {
 .job-requirements[data-compact] h3 {
   font-size: 14px;
 }
+
+/* Odpowiedzi kandydata do wymagań */
+.answers-editor {
+  display: grid;
+  gap: 14px;
+}
+.job-requirements-ref {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.job-requirements-ref li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.job-requirements-ref li[data-covered] .requirement-number {
+  background: var(--foreground);
+  color: #fff;
+}
+.answer-requirements {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.answer-requirements legend {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.answer-requirements label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+.answer-requirements[aria-invalid] {
+  outline: 2px solid var(--gui-error);
+  outline-offset: 6px;
+  border-radius: 6px;
+}
+.requirement-assessment ul {
+  display: grid;
+  gap: 4px;
+  padding-left: 18px;
+  list-style: disc;
+}
