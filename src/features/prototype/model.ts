@@ -1,6 +1,7 @@
 import { z } from "zod";
 import marketplace from "./data/marketplace.json" with { type: "json" };
 import people from "./data/people.json" with { type: "json" };
+import fixture from "./data/fixture-pub-003947.json" with { type: "json" };
 import type { JobWithCompany } from "@/features/jobs/types";
 
 const id = z
@@ -11,6 +12,37 @@ const id = z
 const shortText = z.string().trim().min(1).max(200);
 const text = z.string().trim().max(12000);
 export const MIN_APPLICATION_ANSWER_LENGTH = 20;
+export const MIN_REQUIREMENTS = 3;
+export const MAX_REQUIREMENTS = 5;
+/** Wymaganie w ogłoszeniu. `assessment` brak = nieocenione przez asystenta. */
+export const requirementSchema = z.object({
+  id,
+  text: z.string().trim().min(1).max(400),
+  assessment: z
+    .object({
+      verdict: z.enum(["concrete", "generic"]),
+      note: text,
+      suggestion: z.string().trim().max(400).optional(),
+    })
+    .optional(),
+});
+export type Requirement = z.infer<typeof requirementSchema>;
+/** Odpowiedź kandydata przypięta do co najmniej jednego wymagania. */
+export const answerSchema = z.object({
+  id,
+  text: text.min(MIN_APPLICATION_ANSWER_LENGTH),
+  requirementIds: z.array(id).min(1).max(MAX_REQUIREMENTS),
+});
+export type Answer = z.infer<typeof answerSchema>;
+/** Pokrycie jednego wymagania: propozycja asystenta i werdykt rekrutera. */
+export const coverageSchema = z.object({
+  requirementId: id,
+  aiPercent: z.number().int().min(0).max(100).optional(),
+  aiNote: text.optional(),
+  gaps: z.array(z.string().trim().min(1).max(300)).max(10).optional(),
+  recruiterVerdict: z.enum(["covers", "not"]).optional(),
+});
+export type Coverage = z.infer<typeof coverageSchema>;
 const companySchema = z.object({
   id,
   slug: id,
@@ -53,6 +85,7 @@ export const jobSchema = z
     verificationStatus: z.enum(["unverified", "editorial", "employer_verified"]),
     sourceBrief: text.optional(),
     generatedDescription: text.optional(),
+    requirements: z.array(requirementSchema).max(MAX_REQUIREMENTS).optional(),
   })
   .refine(
     (job) =>
@@ -72,6 +105,8 @@ const personSchema = profileSchema.extend({
   cv: text,
   exampleScore: z.number().int().min(0).max(100),
   exampleSummary: text,
+  /** Osoba z danych case'u: niewidoczna w wyborze osoby. */
+  fixture: z.boolean().optional(),
 });
 export const stages = [
   "submitted",
@@ -122,6 +157,8 @@ const applicationSchema = z.object({
     .array(z.object({ stage: z.enum(stages), at: z.iso.datetime(), note: text }))
     .min(1)
     .max(30),
+  answers: z.array(answerSchema).max(10).optional(),
+  coverage: z.array(coverageSchema).max(MAX_REQUIREMENTS).optional(),
 });
 const draftSchema = z.object({
   candidateId: id,
@@ -129,6 +166,10 @@ const draftSchema = z.object({
   notes: text,
   generated: text,
   answer: text,
+  answers: z
+    .array(answerSchema.partial({ requirementIds: true }))
+    .max(10)
+    .optional(),
 });
 export const stateSchema = z
   .object({
@@ -159,7 +200,11 @@ export const stateSchema = z
     for (const p of s.people)
       if (p.role === "employer" && (!p.companyId || !companyIds.has(p.companyId)))
         problem("Unknown employer company");
-    for (const j of s.jobs) if (!companyIds.has(j.companyId)) problem("Unknown job company");
+    for (const j of s.jobs) {
+      if (!companyIds.has(j.companyId)) problem("Unknown job company");
+      if (j.requirements && new Set(j.requirements.map((r) => r.id)).size !== j.requirements.length)
+        problem("Duplicate requirement identifiers");
+    }
     const keys = new Set<string>();
     for (const a of s.applications) {
       const key = `${a.candidateId}:${a.jobId}`;
@@ -172,6 +217,16 @@ export const stateSchema = z
       keys.add(key);
       if (a.events[0]?.stage !== "submitted" || a.events.at(-1)?.stage !== a.stage)
         problem("Invalid application history");
+      const requirementIds = new Set((jobs.get(a.jobId)?.requirements ?? []).map((r) => r.id));
+      for (const answer of a.answers ?? [])
+        if (!answer.requirementIds.every((r) => requirementIds.has(r)))
+          problem("Answer references unknown requirement");
+      if (a.coverage) {
+        if (new Set(a.coverage.map((c) => c.requirementId)).size !== a.coverage.length)
+          problem("Duplicate coverage");
+        if (!a.coverage.every((c) => requirementIds.has(c.requirementId)))
+          problem("Coverage references unknown requirement");
+      }
       for (let i = 1; i < a.events.length; i++) {
         const before = a.events[i - 1];
         const after = a.events[i];
@@ -197,11 +252,20 @@ export const stateSchema = z
 export type State = z.infer<typeof stateSchema>;
 export type Person = State["people"][number];
 export type Application = State["applications"][number];
+export type Job = State["jobs"][number];
+export type Draft = State["drafts"][number];
 export type Action =
   | { type: "select_person"; id: string | null }
   | { type: "profile"; value: z.infer<typeof profileSchema> }
   | { type: "toggle_saved"; jobId: string }
-  | { type: "draft"; jobId: string; notes: string; generated: string; answer: string }
+  | {
+      type: "draft";
+      jobId: string;
+      notes: string;
+      generated: string;
+      answer: string;
+      answers?: Draft["answers"];
+    }
   | {
       type: "submit";
       jobId: string;
@@ -209,6 +273,19 @@ export type Action =
       generated: string;
       answer: string;
       consent: boolean;
+      /** Wymagane, gdy ogłoszenie ma wymagania: każde wymaganie musi mieć odpowiedź. */
+      answers?: Answer[];
+    }
+  | {
+      type: "coverage";
+      applicationId: string;
+      coverage: Omit<Coverage, "recruiterVerdict">[];
+    }
+  | {
+      type: "verdict";
+      applicationId: string;
+      requirementId: string;
+      verdict: Coverage["recruiterVerdict"];
     }
   | { type: "stage"; applicationId: string; stage: Stage; note: string }
   | { type: "withdraw"; applicationId: string }
@@ -220,8 +297,9 @@ export function initialState(): State {
     version: 1,
     activePersonId: null,
     ...marketplace,
-    people,
-    applications: [],
+    jobs: [...marketplace.jobs, fixture.job],
+    people: [...people, ...fixture.people],
+    applications: fixture.applications,
     saved: [],
     drafts: [],
   });
@@ -288,7 +366,7 @@ export function transition(
     else s.saved.push({ candidateId: p.id, jobId: action.jobId });
   } else if (action.type === "draft") {
     const p = candidate();
-    const draft = draftSchema.parse({ candidateId: p.id, ...action });
+    const draft = draftSchema.parse({ candidateId: p.id, ...action, type: undefined });
     s.drafts = s.drafts.filter((x) => !(x.candidateId === p.id && x.jobId === action.jobId));
     s.drafts.push(draft);
   } else if (action.type === "submit") {
@@ -298,6 +376,21 @@ export function transition(
     if (!action.consent) fail("Zatwierdź treść i zgodę na przesłanie aplikacji.");
     if (s.applications.some((x) => x.candidateId === p.id && x.jobId === job.id))
       fail("Aplikacja na tę ofertę została już wysłana.");
+    const requirements = job.requirements ?? [];
+    let answers: Answer[] | undefined;
+    if (requirements.length) {
+      answers = z
+        .array(answerSchema)
+        .min(1)
+        .max(10)
+        .parse(action.answers ?? []);
+      const covered = new Set(answers.flatMap((a) => a.requirementIds));
+      const missing = requirements.filter((r) => !covered.has(r.id));
+      if (missing.length)
+        fail(
+          `Każde wymaganie potrzebuje odpowiedzi. Brakuje: ${missing.map((r) => r.text).join("; ")}`,
+        );
+    }
     s.applications.push(
       applicationSchema.parse({
         id: newId,
@@ -314,6 +407,7 @@ export function transition(
         summary: p.exampleSummary,
         stage: "submitted",
         events: [{ stage: "submitted", at: now, note: "" }],
+        answers,
       }),
     );
     s.drafts = s.drafts.filter((x) => !(x.candidateId === p.id && x.jobId === job.id));
@@ -335,11 +429,44 @@ export function transition(
     }
     application.stage = stage;
     application.events.push({ stage, at: now, note: action.type === "stage" ? action.note : "" });
+  } else if (action.type === "coverage" || action.type === "verdict") {
+    const p = employer();
+    const application = s.applications.find((x) => x.id === action.applicationId);
+    if (!application || application.companyId !== p.companyId)
+      return fail("Nie znaleziono aplikacji.");
+    const requirementIds = new Set(
+      (s.jobs.find((x) => x.id === application.jobId)?.requirements ?? []).map((r) => r.id),
+    );
+    if (action.type === "coverage") {
+      const previous = new Map((application.coverage ?? []).map((c) => [c.requirementId, c]));
+      application.coverage = action.coverage
+        .filter((c) => requirementIds.has(c.requirementId))
+        .map((c) =>
+          coverageSchema.parse({
+            ...c,
+            recruiterVerdict: previous.get(c.requirementId)?.recruiterVerdict,
+          }),
+        );
+    } else {
+      if (!requirementIds.has(action.requirementId)) fail("Nie znaleziono wymagania.");
+      const coverage = application.coverage ?? [];
+      const item = coverage.find((c) => c.requirementId === action.requirementId);
+      if (item) item.recruiterVerdict = action.verdict;
+      else coverage.push({ requirementId: action.requirementId, recruiterVerdict: action.verdict });
+      application.coverage = coverage;
+    }
   } else if (action.type === "publish") {
     const p = employer();
     const job = jobSchema.parse(action.job);
     if (job.companyId !== p.companyId) fail("Wybierz ofertę własnej firmy.");
     const index = s.jobs.findIndex((x) => x.id === job.id);
+    const isNew = index < 0;
+    const requirements = job.requirements ?? [];
+    if ((isNew || requirements.length) && requirements.length < MIN_REQUIREMENTS)
+      fail(`Nowa oferta potrzebuje od ${MIN_REQUIREMENTS} do ${MAX_REQUIREMENTS} wymagań.`);
+    const generic = requirements.filter((r) => r.assessment?.verdict === "generic");
+    if (generic.length)
+      fail(`Popraw wymagania ocenione jako ogólnik: ${generic.map((r) => r.text).join("; ")}`);
     if (index >= 0) {
       if (s.jobs[index].companyId !== p.companyId) fail("Nie można zmienić tej oferty.");
       s.jobs[index] = job;
@@ -352,4 +479,29 @@ export function transition(
     );
   }
   return stateSchema.parse(s);
+}
+
+/** Pokrycie wymagań do sortowania listy: werdykt rekrutera ma pierwszeństwo przed propozycją asystenta. */
+export function coverageSummary(application: Application, job: Job | undefined) {
+  const requirements = job?.requirements ?? [];
+  if (!requirements.length) return null;
+  const byId = new Map((application.coverage ?? []).map((c) => [c.requirementId, c]));
+  let confirmed = 0;
+  let percentSum = 0;
+  let assessed = 0;
+  for (const r of requirements) {
+    const c = byId.get(r.id);
+    if (c?.recruiterVerdict === "covers") confirmed++;
+    if (c?.aiPercent !== undefined) {
+      assessed++;
+      percentSum += c.aiPercent;
+    }
+  }
+  return {
+    total: requirements.length,
+    confirmed,
+    assessed,
+    averagePercent: assessed ? Math.round(percentSum / assessed) : null,
+    pending: assessed < requirements.length,
+  };
 }
