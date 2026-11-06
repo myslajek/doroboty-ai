@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = dirname(fileURLToPath(import.meta.url));
 const exchange = join(root, "exchange");
 const ID = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,99}$/;
-const KINDS = new Set(["requirements", "gaps", "coverage"]);
+const KINDS = new Set(["requirements", "propose", "gaps", "coverage"]);
 
 async function alive() {
   try {

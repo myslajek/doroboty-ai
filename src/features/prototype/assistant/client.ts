@@ -17,6 +17,9 @@ export const assistantResults = {
       }),
     ),
   }),
+  propose: z.object({
+    items: z.array(z.object({ text: z.string().min(1), why: z.string().default("") })).min(1),
+  }),
   gaps: z.object({ gaps: z.array(z.string()).default([]), note: z.string().default("") }),
   coverage: z.object({
     items: z.array(
@@ -37,6 +40,7 @@ export type AssistantPayload = {
     brief: string;
     requirements: RequirementInput[];
   };
+  propose: { title: string; brief: string };
   gaps: {
     requirements: RequirementInput[];
     answer: { text: string; requirementIds: string[] };

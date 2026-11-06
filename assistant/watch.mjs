@@ -15,7 +15,12 @@ const promptsDir = join(root, "prompts");
 const runtimeCwd = join(homedir(), ".cache", "doroboty-assistant"); // bez CLAUDE.md projektu
 const model = process.env.ASSISTANT_MODEL ?? "sonnet";
 const once = process.argv.includes("--once");
-const kinds = { requirements: "wymagania.md", gaps: "braki.md", coverage: "pokrycie.md" };
+const kinds = {
+  requirements: "wymagania.md",
+  propose: "propozycje.md",
+  gaps: "braki.md",
+  coverage: "pokrycie.md",
+};
 
 async function claude(prompt) {
   return new Promise((resolve, reject) => {

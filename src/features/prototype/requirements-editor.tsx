@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Sparkles, X } from "lucide-react";
+import { Lightbulb, Plus, Sparkles, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -76,6 +76,32 @@ export function RequirementsEditor({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const filled = value.filter((r) => r.text.trim()).length;
+  const canPropose = context.brief.trim().length >= 20;
+  async function propose() {
+    setBusy(true);
+    setMessage("Asystent proponuje wymagania z briefu…");
+    const outcome = await requestAssistant("propose", {
+      title: context.title,
+      brief: context.brief.trim(),
+    });
+    setBusy(false);
+    if (outcome.status === "done") {
+      const proposed = outcome.result.items.slice(0, MAX_REQUIREMENTS).map((item) => ({
+        ...newRequirement(item.text.trim()),
+        assessment: {
+          verdict: "concrete" as const,
+          note: item.why || "Propozycja asystenta z briefu.",
+        },
+      }));
+      const kept = value.filter((r) => r.text.trim());
+      onChange([...kept, ...proposed].slice(0, MAX_REQUIREMENTS));
+      setMessage(
+        `Asystent zaproponował ${proposed.length} wymagania na podstawie briefu. Zmień je swobodnie: opisują zakres pracy, nie branżę.`,
+      );
+    } else if (outcome.status === "offline")
+      setMessage("Asystent wyłączony. Uruchom npm run assistant, żeby dostać propozycje.");
+    else setMessage(outcome.message);
+  }
   function update(id: string, patch: Partial<Requirement>) {
     onChange(value.map((r) => (r.id === id ? { ...r, ...patch } : r)));
   }
@@ -108,9 +134,22 @@ export function RequirementsEditor({
           : `(${MIN_REQUIREMENTS}–${MAX_REQUIREMENTS})`}
       </h2>
       <p className="application-help">
-        Napisz, co kandydat ma pokazać przykładem z własnej pracy: zadanie z pierwszego projektu,
-        nie cechę. Kandydat do każdego wymagania dopisze swój projekt, okres i co zrobił sam.
+        Napisz, co kandydat ma pokazać przykładem z własnej pracy: rodzaj zadania i zakres
+        odpowiedzialności, nie branżę i nie cechę. Podobna praca w innej domenie się liczy. Kandydat
+        do każdego wymagania dopisze swój projekt, okres i co zrobił sam.
       </p>
+      <div className="record-actions">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={busy || !canPropose}
+          title={canPropose ? undefined : "Najpierw wpisz brief (min. 20 znaków)."}
+          onClick={propose}
+        >
+          <Lightbulb aria-hidden="true" /> Zaproponuj wymagania z briefu
+        </Button>
+      </div>
       <ol className="requirements-list">
         {value.map((r, index) => (
           <li
