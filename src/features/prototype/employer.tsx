@@ -12,7 +12,14 @@ import {
   seniorityLabels,
   contractLabels,
 } from "@/features/jobs/presentation";
-import { currentPerson, jobSchema } from "./model";
+import {
+  currentPerson,
+  jobSchema,
+  MAX_REQUIREMENTS,
+  MIN_REQUIREMENTS,
+  type Requirement,
+} from "./model";
+import { assessRequirements, newRequirement, RequirementsEditor } from "./requirements-editor";
 import { usePrototype } from "./store";
 import { Field } from "./workspace";
 import { Empty, NotFound, PageTitle } from "./shell";
@@ -78,8 +85,15 @@ export function EmployerJobEditor() {
   const [generated, setGenerated] = useState(existing?.generatedDescription ?? "");
   const [approved, setApproved] = useState(false);
   const [error, setError] = useState("");
+  const [requirements, setRequirements] = useState<Requirement[]>(
+    () =>
+      existing?.requirements ??
+      (existing ? [] : Array.from({ length: MIN_REQUIREMENTS }, () => newRequirement())),
+  );
+  const [publishing, setPublishing] = useState(false);
   if (id !== "nowa" && !existing) return <NotFound />;
-  function publish(e: FormEvent<HTMLFormElement>) {
+  const legacy = Boolean(existing && !existing.requirements?.length);
+  async function publish(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     if (!approved) {
@@ -87,6 +101,31 @@ export function EmployerJobEditor() {
       return;
     }
     const data = new FormData(e.currentTarget);
+    let list = requirements
+      .filter((r) => r.text.trim())
+      .map((r) => ({ ...r, text: r.text.trim() }));
+    if (!legacy || list.length) {
+      if (list.length < MIN_REQUIREMENTS || list.length > MAX_REQUIREMENTS) {
+        setError(`Dodaj od ${MIN_REQUIREMENTS} do ${MAX_REQUIREMENTS} wymagań.`);
+        return;
+      }
+      if (list.some((r) => !r.assessment)) {
+        setPublishing(true);
+        const assessed = await assessRequirements(list, { title, brief: source });
+        setPublishing(false);
+        if (assessed.status === "done") {
+          list = assessed.requirements;
+          setRequirements(list);
+        }
+      }
+      const generic = list.filter((r) => r.assessment?.verdict === "generic");
+      if (generic.length) {
+        setError(
+          `Asystent ocenił ${generic.length} ${generic.length === 1 ? "wymaganie" : "wymagania"} jako ogólnik. Popraw je albo użyj propozycji, zanim opublikujesz.`,
+        );
+        return;
+      }
+    }
     const newId = existing?.id ?? crypto.randomUUID();
     const parsed = jobSchema.safeParse({
       id: newId,
@@ -97,6 +136,7 @@ export function EmployerJobEditor() {
       description,
       sourceBrief: source,
       generatedDescription: generated,
+      requirements: list.length ? list : undefined,
       category: data.get("category"),
       function: data.get("function"),
       remoteStatus: data.get("remoteStatus"),
@@ -206,6 +246,15 @@ export function EmployerJobEditor() {
             }}
           />
         </Field>
+        <RequirementsEditor
+          value={requirements}
+          onChange={(next) => {
+            setRequirements(next);
+            setApproved(false);
+          }}
+          context={{ title, brief: source }}
+          optional={legacy}
+        />
         <Field label="Opis oferty">
           <Textarea
             required
@@ -265,8 +314,8 @@ export function EmployerJobEditor() {
             {error}
           </p>
         )}
-        <Button type="submit" disabled={!approved}>
-          Opublikuj ofertę
+        <Button type="submit" disabled={!approved || publishing}>
+          {publishing ? "Asystent ocenia wymagania…" : "Opublikuj ofertę"}
         </Button>
       </form>
     </>
