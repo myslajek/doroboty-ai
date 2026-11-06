@@ -1180,3 +1180,71 @@ code {
   padding-left: 18px;
   list-style: disc;
 }
+
+/* Pokrycie wymagań u rekrutera */
+.coverage-score[data-pending] {
+  background: var(--gui-surface-muted);
+}
+.match-score[data-pending] {
+  background: var(--gui-surface-muted);
+}
+.coverage-panel {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.coverage-panel h2 {
+  font-size: 26px;
+  margin: 0;
+}
+.coverage-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.coverage-row {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--foreground);
+  border-radius: 18px;
+}
+.coverage-row[data-verdict="covers"] {
+  background: var(--gui-match-green);
+}
+.coverage-row[data-verdict="not"] {
+  background: var(--gui-surface-muted);
+}
+.coverage-requirement {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.coverage-ai {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--gui-text-muted);
+}
+.coverage-ai ul {
+  padding-left: 18px;
+  list-style: disc;
+}
+.coverage-verdict {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.answers-view {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

@@ -13,10 +13,11 @@ import { usePrototype } from "./store";
 import { currentPerson, publishedJobs, stageLabels, MIN_APPLICATION_ANSWER_LENGTH } from "./model";
 import { PageTitle, Empty, NotFound, Notice } from "./shell";
 import { CvAttachment } from "./cv-attachment";
-import { MatchScore } from "./match-score";
 import { RecruitingApplication } from "./recruiting-application";
 import { CandidateApplication } from "./candidate-application";
 import { AnswersEditor, finalizeAnswers, newAnswer, uncoveredRequirements } from "./answers-editor";
+import { assessCoverage, CoverageScore } from "./coverage-panel";
+import { coverageSummary } from "./model";
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -473,17 +474,44 @@ export function ApplyPage() {
   );
 }
 export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
-  const { state } = usePrototype();
+  const { state, run } = usePrototype();
   const person = currentPerson(state)!;
   const [query, setQuery] = useState("");
+  const [batch, setBatch] = useState("");
   const [params] = useSearchParams();
-  const applications = state.applications.filter(
-    (x) =>
-      (employer ? x.companyId === person.companyId : x.candidateId === person.id) &&
-      `${x.candidateName} ${x.jobTitle}`
-        .toLocaleLowerCase("pl")
-        .includes(query.toLocaleLowerCase("pl")),
-  );
+  const jobs = new Map(state.jobs.map((job) => [job.id, job]));
+  const rank = (a: (typeof state.applications)[number]) => {
+    const s = coverageSummary(a, jobs.get(a.jobId));
+    return s ? [1, s.confirmed, s.averagePercent ?? -1] : [0, 0, a.score];
+  };
+  const applications = state.applications
+    .filter(
+      (x) =>
+        (employer ? x.companyId === person.companyId : x.candidateId === person.id) &&
+        `${x.candidateName} ${x.jobTitle}`
+          .toLocaleLowerCase("pl")
+          .includes(query.toLocaleLowerCase("pl")),
+    )
+    .sort((a, b) => {
+      const [ra, rb] = [rank(a), rank(b)];
+      for (let i = 0; i < ra.length; i++) if (ra[i] !== rb[i]) return rb[i] - ra[i];
+      return 0;
+    });
+  const unassessed = employer
+    ? applications.filter((a) => coverageSummary(a, jobs.get(a.jobId))?.pending)
+    : [];
+  async function assessAll() {
+    setBatch(`Asystent ocenia ${unassessed.length} aplikacji…`);
+    const results = await Promise.all(
+      unassessed.map((a) => assessCoverage(a, jobs.get(a.jobId)!, run)),
+    );
+    const done = results.filter((r) => r === "done").length;
+    setBatch(
+      results.includes("offline")
+        ? "Asystent wyłączony. Włącz npm run assistant, a żądania z kolejki zostaną ocenione."
+        : `Asystent ocenił ${done} z ${unassessed.length} aplikacji.`,
+    );
+  }
   return (
     <>
       <PageTitle>{employer ? "Kandydaci" : "Moje aplikacje"}</PageTitle>
@@ -495,6 +523,23 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
       <Field label={employer ? "Szukaj kandydata lub oferty" : "Szukaj oferty"}>
         <Input value={query} onChange={(e) => setQuery(e.target.value)} />
       </Field>
+      {employer && (
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={!unassessed.length || batch.startsWith("Asystent ocenia")}
+            onClick={assessAll}
+          >
+            Oceń pokrycie wymagań z asystentem ({unassessed.length})
+          </Button>
+          <p role="status" className="record-caption">
+            {batch ||
+              "Lista: najpierw aplikacje na oferty z wymaganiami, wg Twoich werdyktów i propozycji asystenta."}
+          </p>
+        </div>
+      )}
       <div className="mt-6 space-y-4">
         {applications.length ? (
           applications.map((a) => (
@@ -514,9 +559,11 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
                   </p>
                   <p>{stageLabels[a.stage]}</p>
                 </div>
-                <MatchScore score={a.score} />
+                <CoverageScore application={a} job={jobs.get(a.jobId)} />
               </div>
-              {employer && <p className="mt-4 text-muted-foreground">{a.summary}</p>}
+              {employer && !jobs.get(a.jobId)?.requirements?.length && (
+                <p className="mt-4 text-muted-foreground">{a.summary}</p>
+              )}
             </article>
           ))
         ) : (

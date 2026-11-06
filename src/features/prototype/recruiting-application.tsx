@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ApplicationRecord } from "./application-record";
+import { CoveragePanel, CoverageScore } from "./coverage-panel";
 import { nextStages, stageLabels, type Application } from "./model";
 import { usePrototype } from "./store";
 
@@ -12,6 +13,8 @@ export function RecruitingApplication({ application }: { application: Applicatio
   const statusRef = useRef<HTMLSpanElement>(null);
   const pendingFocus = useRef(false);
   const company = state.companies.find((item) => item.id === application.companyId);
+  const job = state.jobs.find((item) => item.id === application.jobId);
+  const withRequirements = Boolean(job?.requirements?.length);
   const availableStages = nextStages[application.stage];
 
   useLayoutEffect(() => {
@@ -25,6 +28,8 @@ export function RecruitingApplication({ application }: { application: Applicatio
     <>
       <ApplicationRecord
         application={application}
+        requirements={job?.requirements}
+        score={<CoverageScore application={application} job={job} />}
         companyName={company?.name ?? ""}
         audience="employer"
         history={application.events}
@@ -58,6 +63,7 @@ export function RecruitingApplication({ application }: { application: Applicatio
           )
         }
       >
+        {withRequirements && job && <CoveragePanel application={application} job={job} />}
         {availableStages.length > 0 ? (
           <>
             <h3>

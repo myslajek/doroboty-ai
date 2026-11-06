@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ApplicationRecord } from "./application-record";
+import { CoverageScore } from "./coverage-panel";
 import type { Application } from "./model";
 import { usePrototype } from "./store";
 
@@ -13,6 +14,7 @@ export function CandidateApplication({ application }: { application: Application
   const confirmRef = useRef<HTMLButtonElement>(null);
   const focusAfter = useRef<"status" | "trigger" | "confirm" | null>(null);
   const company = state.companies.find((item) => item.id === application.companyId);
+  const job = state.jobs.find((item) => item.id === application.jobId);
   const terminal = ["withdrawn", "rejected", "hired"].includes(application.stage);
 
   useLayoutEffect(() => {
@@ -25,6 +27,8 @@ export function CandidateApplication({ application }: { application: Application
     <>
       <ApplicationRecord
         application={application}
+        requirements={job?.requirements}
+        score={<CoverageScore application={application} job={job} />}
         companyName={company?.name ?? ""}
         audience="candidate"
         history={application.events.map(({ stage, at }) => ({ stage, at }))}
