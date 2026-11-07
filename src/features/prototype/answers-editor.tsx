@@ -31,12 +31,15 @@ export function AnswersEditor({
   onChange,
   disabled = false,
   attempted = false,
+  candidate,
 }: {
   requirements: Requirement[];
   value: DraftAnswer[];
   onChange: (next: DraftAnswer[]) => void;
   disabled?: boolean;
   attempted?: boolean;
+  /** Profil i CV kandydata: asystent sprawdza spójność odpowiedzi z nimi. */
+  candidate?: { headline: string; bio: string; cv: string };
 }) {
   const [gaps, setGaps] = useState<
     Record<string, { gaps: string[]; note: string } | "busy" | "offline">
@@ -52,6 +55,10 @@ export function AnswersEditor({
         .filter((r) => answer.requirementIds.includes(r.id))
         .map((r) => ({ id: r.id, text: r.text })),
       answer: { text: answer.text.trim(), requirementIds: answer.requirementIds },
+      ...(candidate && {
+        cv: candidate.cv,
+        profile: { headline: candidate.headline, bio: candidate.bio },
+      }),
     });
     setGaps((g) => ({
       ...g,

@@ -10,18 +10,32 @@ import {
   type Action,
   type Application,
   type Job,
+  type Person,
   type Requirement,
 } from "./model";
 
+/** Wszystko, co portal ma o kandydacie: profil i CV w takiej jakości, jaką dał (decyzja 7.11.2026). */
+export function candidateContext(
+  application: Pick<Application, "candidateId" | "cv">,
+  people: Pick<Person, "id" | "headline" | "bio">[],
+) {
+  const person = people.find((p) => p.id === application.candidateId);
+  return {
+    cv: application.cv,
+    profile: { headline: person?.headline ?? "", bio: person?.bio ?? "" },
+  };
+}
 /** Prośba do asystenta o % pokrycia każdego wymagania; wynik trafia do stanu akcją `coverage`. */
 export async function assessCoverage(
   application: Application,
   job: Job,
   run: (action: Action) => boolean,
+  people: Pick<Person, "id" | "headline" | "bio">[],
   options: { waitWhenOffline?: boolean } = {},
 ) {
   const requirements = (job.requirements ?? []).map((r) => ({ id: r.id, text: r.text }));
   if (!requirements.length) return "skipped" as const;
+  const context = candidateContext(application, people);
   const outcome = await requestAssistant(
     "coverage",
     application.answers?.length
@@ -31,8 +45,9 @@ export async function assessCoverage(
             text: a.text,
             requirementIds: a.requirementIds,
           })),
+          ...context,
         }
-      : { requirements, legacyAnswer: application.answer },
+      : { requirements, legacyAnswer: application.answer, ...context },
     options,
   );
   if (outcome.status !== "done") return outcome.status;
@@ -44,6 +59,8 @@ export async function assessCoverage(
       aiPercent: Math.round(item.percent),
       aiNote: item.note,
       gaps: item.gaps,
+      consistency: item.consistency,
+      consistencyNote: item.consistencyNote,
     })),
   });
   return "done" as const;
@@ -112,11 +129,11 @@ export function CoveragePanel({ application, job }: { application: Application; 
   const requirements = job.requirements ?? [];
   const byId = new Map((application.coverage ?? []).map((c) => [c.requirementId, c]));
   const assessed = requirements.every((r) => byId.get(r.id)?.aiPercent !== undefined);
-  const { run } = usePrototype();
+  const { run, state } = usePrototype();
   async function assess() {
     setBusy(true);
     setMessage("Asystent ocenia pokrycie…");
-    const status = await assessCoverage(application, job, run);
+    const status = await assessCoverage(application, job, run, state.people);
     setBusy(false);
     setMessage(
       status === "done"
@@ -159,7 +176,17 @@ export function CoveragePanel({ application, job }: { application: Application; 
                     Asystent: {c.aiPercent}%
                   </span>
                 )}
+                {c?.consistency && (
+                  <span className="match-score consistency" data-consistency={c.consistency}>
+                    {c.consistency === "consistent"
+                      ? "Spójne z profilem i CV"
+                      : c.consistency === "conflict"
+                        ? "Rozjazd z profilem lub CV"
+                        : "Profil i CV nie mówią o tym"}
+                  </span>
+                )}
                 {c?.aiNote && <p>{c.aiNote}</p>}
+                {c?.consistencyNote && <p>{c.consistencyNote}</p>}
                 {c?.gaps && c.gaps.length > 0 && (
                   <ul>
                     {c.gaps.map((g) => (

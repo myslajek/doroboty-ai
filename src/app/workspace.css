@@ -1248,3 +1248,13 @@ code {
   padding: 0;
   list-style: none;
 }
+
+.consistency[data-consistency="consistent"] {
+  background: var(--gui-match-green);
+}
+.consistency[data-consistency="conflict"] {
+  background: var(--gui-match-orange);
+}
+.consistency[data-consistency="unknown"] {
+  background: var(--gui-surface-muted);
+}

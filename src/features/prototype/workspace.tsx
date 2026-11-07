@@ -373,6 +373,7 @@ export function ApplyPage() {
               }}
               disabled={submitted}
               attempted={attempted}
+              candidate={{ headline: person.headline, bio: person.bio, cv: person.cv }}
             />
           ) : (
             <section
@@ -503,7 +504,7 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
   async function assessAll() {
     setBatch(`Asystent ocenia ${unassessed.length} aplikacji…`);
     const results = await Promise.all(
-      unassessed.map((a) => assessCoverage(a, jobs.get(a.jobId)!, run)),
+      unassessed.map((a) => assessCoverage(a, jobs.get(a.jobId)!, run, state.people)),
     );
     const done = results.filter((r) => r === "done").length;
     setBatch(

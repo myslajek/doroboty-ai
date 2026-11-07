@@ -28,10 +28,13 @@ export const assistantResults = {
         percent: z.number().min(0).max(100),
         note: z.string().default(""),
         gaps: z.array(z.string()).default([]),
+        consistency: z.enum(["consistent", "conflict", "unknown"]).optional(),
+        consistencyNote: z.string().optional(),
       }),
     ),
   }),
 };
+export type CandidateContext = { profile: { headline: string; bio: string }; cv: string };
 export type AssistantKind = keyof typeof assistantResults;
 export type AssistantResult<K extends AssistantKind> = z.infer<(typeof assistantResults)[K]>;
 export type AssistantPayload = {
@@ -44,12 +47,12 @@ export type AssistantPayload = {
   gaps: {
     requirements: RequirementInput[];
     answer: { text: string; requirementIds: string[] };
-  };
+  } & Partial<CandidateContext>;
   coverage: {
     requirements: RequirementInput[];
     answers?: { text: string; requirementIds: string[] }[];
     legacyAnswer?: string;
-  };
+  } & Partial<CandidateContext>;
 };
 export type AssistantOutcome<K extends AssistantKind> =
   | { status: "done"; result: AssistantResult<K> }

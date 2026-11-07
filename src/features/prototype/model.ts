@@ -40,6 +40,9 @@ export const coverageSchema = z.object({
   aiPercent: z.number().int().min(0).max(100).optional(),
   aiNote: text.optional(),
   gaps: z.array(z.string().trim().min(1).max(300)).max(10).optional(),
+  /** Spójność odpowiedzi z profilem i CV wg asystenta. */
+  consistency: z.enum(["consistent", "conflict", "unknown"]).optional(),
+  consistencyNote: text.optional(),
   recruiterVerdict: z.enum(["covers", "not"]).optional(),
 });
 export type Coverage = z.infer<typeof coverageSchema>;

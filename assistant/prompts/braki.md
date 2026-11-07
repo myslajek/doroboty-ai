@@ -12,5 +12,7 @@ Nie wymagaj rzeczy, których wymaganie nie dotyczy. Jeśli odpowiedź jest kompl
 Odpowiedz WYŁĄCZNIE poprawnym JSON, bez komentarzy i bez bloku kodu:
 {"gaps":["<brak 1, krótko, po polsku>", "..."],"note":"<1 zdanie>"}
 
+Jeśli w danych jest `cv` lub `profile`, sprawdź też, czy odpowiedź zgadza się z nimi (rola, projekt, okres, kto co robił) i wskaż rozjazd jako brak do wyjaśnienia.
+
 Dane wejściowe (JSON):
 {{payload}}
