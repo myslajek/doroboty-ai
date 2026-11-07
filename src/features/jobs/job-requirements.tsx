@@ -10,7 +10,7 @@ export function JobRequirements({
   if (!requirements?.length) return null;
   return (
     <section className="job-requirements" data-compact={compact || undefined}>
-      <h3>Wymagania: do każdego dopisz swój przykład</h3>
+      <h3>Pytania pracodawcy: odpowiedz przykładem z własnej pracy</h3>
       <ol>
         {requirements.map((r) => (
           <li key={r.id}>{r.text}</li>

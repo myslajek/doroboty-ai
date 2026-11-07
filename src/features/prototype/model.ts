@@ -283,6 +283,8 @@ export type Action =
       type: "coverage";
       applicationId: string;
       coverage: Omit<Coverage, "recruiterVerdict">[];
+      /** Krótkie, nietechniczne podsumowanie odpowiedzi kandydata od asystenta. */
+      summary?: string;
     }
   | {
       type: "verdict";
@@ -391,7 +393,7 @@ export function transition(
       const missing = requirements.filter((r) => !covered.has(r.id));
       if (missing.length)
         fail(
-          `Każde wymaganie potrzebuje odpowiedzi. Brakuje: ${missing.map((r) => r.text).join("; ")}`,
+          `Każde pytanie potrzebuje odpowiedzi. Brakuje: ${missing.map((r) => r.text).join("; ")}`,
         );
     }
     s.applications.push(
@@ -441,6 +443,7 @@ export function transition(
       (s.jobs.find((x) => x.id === application.jobId)?.requirements ?? []).map((r) => r.id),
     );
     if (action.type === "coverage") {
+      if (action.summary?.trim()) application.summary = text.parse(action.summary);
       const previous = new Map((application.coverage ?? []).map((c) => [c.requirementId, c]));
       application.coverage = action.coverage
         .filter((c) => requirementIds.has(c.requirementId))
@@ -466,10 +469,12 @@ export function transition(
     const isNew = index < 0;
     const requirements = job.requirements ?? [];
     if ((isNew || requirements.length) && requirements.length < MIN_REQUIREMENTS)
-      fail(`Nowa oferta potrzebuje od ${MIN_REQUIREMENTS} do ${MAX_REQUIREMENTS} wymagań.`);
+      fail(
+        `Nowa oferta potrzebuje od ${MIN_REQUIREMENTS} do ${MAX_REQUIREMENTS} pytań do kandydata.`,
+      );
     const generic = requirements.filter((r) => r.assessment?.verdict === "generic");
     if (generic.length)
-      fail(`Popraw wymagania ocenione jako ogólnik: ${generic.map((r) => r.text).join("; ")}`);
+      fail(`Popraw pytania ocenione jako ogólnik: ${generic.map((r) => r.text).join("; ")}`);
     if (index >= 0) {
       if (s.jobs[index].companyId !== p.companyId) fail("Nie można zmienić tej oferty.");
       s.jobs[index] = job;

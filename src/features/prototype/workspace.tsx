@@ -533,11 +533,11 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
             disabled={!unassessed.length || batch.startsWith("Asystent ocenia")}
             onClick={assessAll}
           >
-            Oceń pokrycie wymagań z asystentem ({unassessed.length})
+            Oceń odpowiedzi z asystentem ({unassessed.length})
           </Button>
           <p role="status" className="record-caption">
             {batch ||
-              "Lista: najpierw aplikacje na oferty z wymaganiami, wg Twoich werdyktów i propozycji asystenta."}
+              "Lista: najpierw aplikacje na oferty z pytaniami, wg Twoich werdyktów i propozycji asystenta."}
           </p>
         </div>
       )}

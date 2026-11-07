@@ -54,6 +54,7 @@ export async function assessCoverage(
   run({
     type: "coverage",
     applicationId: application.id,
+    summary: outcome.result.summary,
     coverage: outcome.result.items.map((item) => ({
       requirementId: item.requirementId,
       aiPercent: Math.round(item.percent),
@@ -108,7 +109,7 @@ export function AnswersView({
       {application.answers.map((a, index) => (
         <li key={a.id}>
           <p className="record-caption">
-            Odpowiedź {index + 1} · dotyczy wymagań:{" "}
+            Odpowiedź {index + 1} · na pytania:{" "}
             {a.requirementIds
               .map((id) => requirements.findIndex((r) => r.id === id) + 1)
               .filter((n) => n > 0)
@@ -154,9 +155,10 @@ export function CoveragePanel({ application, job }: { application: Application; 
   }, [alive, assessed]);
   return (
     <section className="coverage-panel" aria-labelledby="coverage-heading">
-      <h2 id="coverage-heading">Pokrycie wymagań</h2>
+      <h2 id="coverage-heading">Odpowiedzi na pytania pracodawcy</h2>
       <p className="record-caption">
-        Asystent proponuje procent i uzasadnienie. Ty decydujesz, czy wymaganie jest pokryte.
+        Asystent proponuje procent i uzasadnienie. Ty decydujesz, czy odpowiedź pokazuje podobne
+        zadanie zrobione własną pracą.
       </p>
       <ol className="coverage-list">
         {requirements.map((r, index) => {
@@ -198,7 +200,7 @@ export function CoveragePanel({ application, job }: { application: Application; 
               <div
                 className="coverage-verdict"
                 role="group"
-                aria-label={`Twój werdykt: wymaganie ${index + 1}`}
+                aria-label={`Twój werdykt: pytanie ${index + 1}`}
               >
                 {(
                   [

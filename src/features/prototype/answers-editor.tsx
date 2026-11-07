@@ -72,11 +72,11 @@ export function AnswersEditor({
   }
   return (
     <section className="application-form-section answers-editor" aria-labelledby="answers-title">
-      <h3 id="answers-title">Twoje przykłady do wymagań</h3>
+      <h3 id="answers-title">Odpowiedzi na pytania pracodawcy</h3>
       <p className="application-help">
-        Pracodawca podał {requirements.length} wymagania. Do każdego dopisz przykład z własnej
-        pracy: jaki projekt, w jakim okresie, co zrobiłeś/aś sam/a i z jakim efektem. Jedna
-        odpowiedź może dotyczyć kilku wymagań: zaznacz, których.
+        Pracodawca zadał {requirements.length} pytania o zadania z przeszłości. Odpowiedz przykładem
+        z własnej pracy: jaki projekt, w jakim okresie, co zrobiłeś/aś sam/a, co robili inni i jaki
+        był efekt. Jedna odpowiedź może dotyczyć kilku pytań: zaznacz, których.
       </p>
       <ol className="job-requirements-ref">
         {requirements.map((r, i) => (
@@ -125,13 +125,13 @@ export function AnswersEditor({
                 </p>
               )}
               <fieldset className="answer-requirements" aria-invalid={untagged || undefined}>
-                <legend>Dotyczy wymagań</legend>
+                <legend>Odpowiada na pytania</legend>
                 {requirements.map((r, i) => (
                   <label key={r.id}>
                     <Checkbox
                       disabled={disabled}
                       checked={a.requirementIds.includes(r.id)}
-                      aria-label={`Odpowiedź ${index + 1} dotyczy wymagania ${i + 1}`}
+                      aria-label={`Odpowiedź ${index + 1} odpowiada na pytanie ${i + 1}`}
                       onCheckedChange={(checked) =>
                         update(a.id, {
                           requirementIds: checked
@@ -148,7 +148,7 @@ export function AnswersEditor({
               </fieldset>
               {untagged && (
                 <p className="error-message" role="alert">
-                  Zaznacz, których wymagań dotyczy ta odpowiedź.
+                  Zaznacz, na które pytania odpowiada ten przykład.
                 </p>
               )}
               <div className="record-actions">
@@ -206,8 +206,8 @@ export function AnswersEditor({
         className={attempted && uncovered.length ? "error-message" : "record-caption"}
       >
         {uncovered.length
-          ? `Bez odpowiedzi: ${uncovered.map((r) => requirements.indexOf(r) + 1).join(", ")} z ${requirements.length} wymagań.`
-          : `Każde z ${requirements.length} wymagań ma odpowiedź.`}
+          ? `Bez odpowiedzi: pytania ${uncovered.map((r) => requirements.indexOf(r) + 1).join(", ")} z ${requirements.length}.`
+          : `Każde z ${requirements.length} pytań ma odpowiedź.`}
       </p>
       <AssistantStatus />
     </section>

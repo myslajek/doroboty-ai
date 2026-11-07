@@ -29,7 +29,7 @@
     "requirements": [
       {
         "id": "req-1",
-        "text": "Zbudowałeś/aś komponent wyszukiwania nad danymi katalogowymi (np. semantyczne lub hybrydowe) i odpowiadałeś/aś za niego od wdrożenia do utrzymania.",
+        "text": "Opowiedz o projekcie, w którym sam/a zbudowałeś/aś komponent wyszukiwania nad większym zbiorem danych (np. katalog, dokumenty, baza wiedzy) i dowiozłeś/aś go do użycia. Co należało do Ciebie, a co do innych?",
         "assessment": {
           "verdict": "concrete",
           "note": "Wynika z pierwszego projektu (katalog produktów) i da się na nie odpowiedzieć przykładem z własnej pracy."
@@ -37,7 +37,7 @@
       },
       {
         "id": "req-2",
-        "text": "Porównałeś/aś co najmniej dwa sposoby wyszukiwania (np. pełnotekstowe i wektorowe) na własnym zestawie testów i podjąłeś/ęłaś decyzję na podstawie wyniku.",
+        "text": "Opowiedz, jak porównałeś/aś co najmniej dwa sposoby wyszukiwania (np. pełnotekstowe i wektorowe) na własnym zestawie testów i jaką decyzję podjąłeś/ęłaś na podstawie wyniku.",
         "assessment": {
           "verdict": "concrete",
           "note": "Konkretne: wskazuje czynność (porównanie), materiał (zestaw testów) i efekt (decyzja)."
@@ -45,7 +45,7 @@
       },
       {
         "id": "req-3",
-        "text": "Uporządkowałeś/aś surowe dane wejściowe (deduplikacja, normalizacja atrybutów, braki) przed podłączeniem modelu.",
+        "text": "Opowiedz o porządkowaniu surowych danych wejściowych przed podłączeniem modelu (deduplikacja, normalizacja, braki): co zrobiłeś/aś sam/a i jaki to miało efekt.",
         "assessment": {
           "verdict": "concrete",
           "note": "Konkretne: nazywa rodzaj pracy na danych, który poprzedza pierwszy projekt."
@@ -53,7 +53,7 @@
       },
       {
         "id": "req-4",
-        "text": "Oceniałeś/aś jakość odpowiedzi modelu po wdrożeniu (metryki, próbki, koszty) i utrzymywałeś/aś komponent w produkcji.",
+        "text": "Opowiedz o utrzymaniu komponentu po wdrożeniu dłużej niż kilka tygodni: jak oceniałeś/aś jakość odpowiedzi (metryki, próbki, koszty), co się psuło i jak to obsłużyłeś/aś.",
         "assessment": {
           "verdict": "concrete",
           "note": "Konkretne: odpowiada za ewaluację i utrzymanie z opisu odpowiedzialności."

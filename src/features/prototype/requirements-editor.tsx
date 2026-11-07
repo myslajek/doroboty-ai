@@ -7,6 +7,14 @@ import { requestAssistant } from "./assistant/client";
 import { AssistantStatus } from "./assistant/status";
 import { MAX_REQUIREMENTS, MIN_REQUIREMENTS, type Requirement } from "./model";
 
+const kindLabels: Record<string, string> = {
+  wklad: "Własny wkład",
+  rezultat: "Rezultat",
+  utrzymanie: "Utrzymanie",
+  uzgodnienia: "Uzgodnienia",
+  dane: "Dane",
+  inne: "Inne",
+};
 export const verdictLabels = {
   concrete: "Konkretne",
   generic: "Ogólnik",
@@ -76,38 +84,12 @@ export function RequirementsEditor({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const filled = value.filter((r) => r.text.trim()).length;
-  const canPropose = context.brief.trim().length >= 20;
-  async function propose() {
-    setBusy(true);
-    setMessage("Asystent proponuje wymagania z briefu…");
-    const outcome = await requestAssistant("propose", {
-      title: context.title,
-      brief: context.brief.trim(),
-    });
-    setBusy(false);
-    if (outcome.status === "done") {
-      const proposed = outcome.result.items.slice(0, MAX_REQUIREMENTS).map((item) => ({
-        ...newRequirement(item.text.trim()),
-        assessment: {
-          verdict: "concrete" as const,
-          note: item.why || "Propozycja asystenta z briefu.",
-        },
-      }));
-      const kept = value.filter((r) => r.text.trim());
-      onChange([...kept, ...proposed].slice(0, MAX_REQUIREMENTS));
-      setMessage(
-        `Asystent zaproponował ${proposed.length} wymagania na podstawie briefu. Zmień je swobodnie: opisują zakres pracy, nie branżę.`,
-      );
-    } else if (outcome.status === "offline")
-      setMessage("Asystent wyłączony. Uruchom npm run assistant, żeby dostać propozycje.");
-    else setMessage(outcome.message);
-  }
   function update(id: string, patch: Partial<Requirement>) {
     onChange(value.map((r) => (r.id === id ? { ...r, ...patch } : r)));
   }
   async function assess() {
     setBusy(true);
-    setMessage("Asystent ocenia wymagania…");
+    setMessage("Asystent ocenia pytania…");
     const result = await assessRequirements(value, context);
     setBusy(false);
     if (result.status === "done") {
@@ -116,14 +98,44 @@ export function RequirementsEditor({
       setMessage(
         generic
           ? `Asystent ocenił: ${generic} z ${filled} to ogólnik. Popraw lub użyj propozycji.`
-          : "Asystent ocenił: wszystkie wymagania są konkretne.",
+          : "Asystent ocenił: wszystkie pytania są konkretne.",
       );
     } else if (result.status === "offline")
-      setMessage(
-        "Asystent wyłączony. Wymagania zostaną ocenione po uruchomieniu npm run assistant.",
-      );
+      setMessage("Asystent wyłączony. Pytania zostaną ocenione po uruchomieniu npm run assistant.");
     else
       setMessage(result.outcome?.status === "error" ? result.outcome.message : "Błąd asystenta.");
+  }
+  const canPropose = context.brief.trim().length >= 20;
+  const [proposals, setProposals] = useState<{ text: string; why: string; kind: string }[]>([]);
+  const [tips, setTips] = useState<string[]>([]);
+  async function propose() {
+    setBusy(true);
+    setMessage("Asystent proponuje pytania z briefu…");
+    const outcome = await requestAssistant("propose", {
+      title: context.title,
+      brief: context.brief.trim(),
+    });
+    setBusy(false);
+    if (outcome.status === "done") {
+      setProposals(outcome.result.items);
+      setTips(outcome.result.tips);
+      setMessage(
+        `Asystent zaproponował ${outcome.result.items.length} pytania. Dodaj te, które pasują do tej roli, i zmień je swobodnie.`,
+      );
+    } else if (outcome.status === "offline")
+      setMessage("Asystent wyłączony. Uruchom npm run assistant, żeby dostać propozycje.");
+    else setMessage(outcome.message);
+  }
+  function addProposal(item: { text: string; why: string }) {
+    if (value.filter((r) => r.text.trim()).length >= MAX_REQUIREMENTS) return;
+    const empty = value.find((r) => !r.text.trim());
+    const next = {
+      ...(empty ?? newRequirement()),
+      text: item.text,
+      assessment: { verdict: "concrete" as const, note: item.why || "Propozycja asystenta." },
+    };
+    onChange(empty ? value.map((r) => (r.id === empty.id ? next : r)) : [...value, next]);
+    setProposals((list) => list.filter((x) => x.text !== item.text));
   }
   return (
     <section className="requirements-editor" aria-labelledby="requirements-title">
@@ -134,10 +146,27 @@ export function RequirementsEditor({
           : `(${MIN_REQUIREMENTS}–${MAX_REQUIREMENTS})`}
       </h2>
       <p className="application-help">
-        Napisz, co kandydat ma pokazać przykładem z własnej pracy: rodzaj zadania i zakres
-        odpowiedzialności, nie branżę i nie cechę. Podobna praca w innej domenie się liczy. Kandydat
-        do każdego wymagania dopisze swój projekt, okres i co zrobił sam.
+        Zapytaj o zadanie z przeszłości podobne do tego, które czeka w tej roli. Kandydat odpowie
+        przykładem z własnej pracy: projekt, okres, co zrobił sam, efekt. Pytaj o rodzaj zadania i
+        zakres odpowiedzialności, nie o branżę i nie o cechy.
       </p>
+      <aside className="prototype-notice requirements-tips" aria-labelledby="tips-title">
+        <strong id="tips-title">O co warto zapytać</strong>
+        <ul>
+          <li>Własny wkład: „co należało do Ciebie, a co do innych” w podobnym zadaniu.</li>
+          <li>Rezultat: jak sprawdzono, że to działa (próbka, miara, co zmieniono po wyniku).</li>
+          <li>Utrzymanie albo uzgodnienia: co po wdrożeniu, z kim trzeba było to ustalać.</li>
+          {tips.map((tip) => (
+            <li key={tip}>
+              <em>Z Twojego briefu:</em> {tip}
+            </li>
+          ))}
+        </ul>
+        <p className="record-caption">
+          Rekruterzy najczęściej dopisują po screeningu uzgodnienia między działami i utrzymanie.
+          Dopisane po screeningu obniża kontynuacje 2–3×, więc lepiej zapytać od razu.
+        </p>
+      </aside>
       <div className="record-actions">
         <Button
           type="button"
@@ -147,9 +176,35 @@ export function RequirementsEditor({
           title={canPropose ? undefined : "Najpierw wpisz brief (min. 20 znaków)."}
           onClick={propose}
         >
-          <Lightbulb aria-hidden="true" /> Zaproponuj wymagania z briefu
+          <Lightbulb aria-hidden="true" /> Zaproponuj pytania z briefu
         </Button>
       </div>
+      {proposals.length > 0 && (
+        <section className="requirements-proposals" aria-labelledby="proposals-title">
+          <h3 id="proposals-title">Propozycje asystenta</h3>
+          <ul>
+            {proposals.map((item) => (
+              <li key={item.text}>
+                <div>
+                  <p>{item.text}</p>
+                  <p className="record-caption">
+                    {kindLabels[item.kind] ?? "Inne"} · {item.why}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={busy || value.filter((r) => r.text.trim()).length >= MAX_REQUIREMENTS}
+                  onClick={() => addProposal(item)}
+                >
+                  <Plus aria-hidden="true" /> Dodaj
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <ol className="requirements-list">
         {value.map((r, index) => (
           <li
@@ -164,7 +219,7 @@ export function RequirementsEditor({
                 type="button"
                 variant="ghost"
                 size="icon-sm"
-                aria-label={`Usuń wymaganie ${index + 1}`}
+                aria-label={`Usuń pytanie ${index + 1}`}
                 disabled={busy}
                 onClick={() => onChange(value.filter((x) => x.id !== r.id))}
               >
@@ -172,12 +227,12 @@ export function RequirementsEditor({
               </Button>
             </div>
             <Textarea
-              aria-label={`Wymaganie ${index + 1}`}
+              aria-label={`Pytanie ${index + 1}`}
               rows={2}
               maxLength={400}
               disabled={busy}
               value={r.text}
-              placeholder="Np. Zbudowałeś/aś klasyfikator zgłoszeń klientów i utrzymywałeś/aś go po wdrożeniu."
+              placeholder="Np. Opowiedz o projekcie, w którym sam/a zbudowałeś/aś komponent przetwarzający teksty. Co należało do Ciebie, a co do innych?"
               onChange={(e) => update(r.id, { text: e.target.value, assessment: undefined })}
             />
             {r.assessment && (
@@ -213,7 +268,7 @@ export function RequirementsEditor({
           disabled={busy || value.length >= MAX_REQUIREMENTS}
           onClick={() => onChange([...value, newRequirement()])}
         >
-          <Plus aria-hidden="true" /> Dodaj wymaganie
+          <Plus aria-hidden="true" /> Dodaj własne pytanie
         </Button>
         <Button
           type="button"
@@ -226,7 +281,7 @@ export function RequirementsEditor({
         </Button>
       </div>
       <p role="status" className="record-caption">
-        {message || `${filled} z ${MAX_REQUIREMENTS} wymagań.`}
+        {message || `${filled} z ${MAX_REQUIREMENTS} pytań.`}
       </p>
       <AssistantStatus />
     </section>

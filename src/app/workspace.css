@@ -1258,3 +1258,48 @@ code {
 .consistency[data-consistency="unknown"] {
   background: var(--gui-surface-muted);
 }
+
+/* Pytania do kandydata: baner i propozycje asystenta */
+.requirements-tips {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.requirements-tips ul {
+  display: grid;
+  gap: 4px;
+  padding-left: 18px;
+  list-style: disc;
+}
+.requirements-proposals {
+  display: grid;
+  gap: 10px;
+}
+.requirements-proposals h3 {
+  font-size: 18px;
+  margin: 0;
+}
+.requirements-proposals ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.requirements-proposals li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 1px dashed var(--foreground);
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.requirements-proposals li > div {
+  display: grid;
+  gap: 4px;
+}

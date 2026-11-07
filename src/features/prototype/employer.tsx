@@ -106,7 +106,7 @@ export function EmployerJobEditor() {
       .map((r) => ({ ...r, text: r.text.trim() }));
     if (!legacy || list.length) {
       if (list.length < MIN_REQUIREMENTS || list.length > MAX_REQUIREMENTS) {
-        setError(`Dodaj od ${MIN_REQUIREMENTS} do ${MAX_REQUIREMENTS} wymagań.`);
+        setError(`Dodaj od ${MIN_REQUIREMENTS} do ${MAX_REQUIREMENTS} pytań do kandydata.`);
         return;
       }
       if (list.some((r) => !r.assessment)) {
@@ -121,7 +121,7 @@ export function EmployerJobEditor() {
       const generic = list.filter((r) => r.assessment?.verdict === "generic");
       if (generic.length) {
         setError(
-          `Asystent ocenił ${generic.length} ${generic.length === 1 ? "wymaganie" : "wymagania"} jako ogólnik. Popraw je albo użyj propozycji, zanim opublikujesz.`,
+          `Asystent ocenił ${generic.length} ${generic.length === 1 ? "pytanie" : "pytania"} jako ogólnik. Popraw je albo użyj propozycji, zanim opublikujesz.`,
         );
         return;
       }
@@ -315,7 +315,7 @@ export function EmployerJobEditor() {
           </p>
         )}
         <Button type="submit" disabled={!approved || publishing}>
-          {publishing ? "Asystent ocenia wymagania…" : "Opublikuj ofertę"}
+          {publishing ? "Asystent ocenia pytania…" : "Opublikuj ofertę"}
         </Button>
       </form>
     </>

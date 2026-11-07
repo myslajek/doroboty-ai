@@ -18,10 +18,20 @@ export const assistantResults = {
     ),
   }),
   propose: z.object({
-    items: z.array(z.object({ text: z.string().min(1), why: z.string().default("") })).min(1),
+    items: z
+      .array(
+        z.object({
+          text: z.string().min(1),
+          why: z.string().default(""),
+          kind: z.string().default("inne"),
+        }),
+      )
+      .min(1),
+    tips: z.array(z.string()).default([]),
   }),
   gaps: z.object({ gaps: z.array(z.string()).default([]), note: z.string().default("") }),
   coverage: z.object({
+    summary: z.string().default(""),
     items: z.array(
       z.object({
         requirementId: z.string(),
