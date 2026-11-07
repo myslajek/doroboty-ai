@@ -7,7 +7,7 @@ export function AssistantStatus() {
       {alive === null
         ? "Sprawdzam asystenta…"
         : alive
-          ? "Asystent włączony: ocenia wymagania i odpowiedzi na bieżąco."
+          ? "Asystent włączony: ocenia pytania i odpowiedzi na bieżąco."
           : "Asystent wyłączony. Uruchom w terminalu: npm run assistant. Żądania czekają w kolejce."}
     </p>
   );

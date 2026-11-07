@@ -140,7 +140,7 @@ export function RequirementsEditor({
   return (
     <section className="requirements-editor" aria-labelledby="requirements-title">
       <h2 id="requirements-title">
-        Wymagania{" "}
+        Pytania do kandydata{" "}
         {optional
           ? "(opcjonalne dla starszych ofert)"
           : `(${MIN_REQUIREMENTS}–${MAX_REQUIREMENTS})`}
