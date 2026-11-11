@@ -104,6 +104,10 @@ test("published job → saved offer/draft → submitted application → employer
     .fill("Szukamy osoby do badań z klientami, prototypowania i wdrażania automatyzacji obsługi.");
   await page.getByRole("button", { name: "Przygotuj opis z AI" }).click();
   await page.getByRole("button", { name: "Użyj propozycji" }).click();
+  // New offers need 3–5 questions; the static build answers from recorded assistant replies.
+  await page.getByRole("button", { name: "Zaproponuj pytania z briefu", exact: true }).click();
+  for (let i = 0; i < 3; i += 1)
+    await page.getByRole("button", { name: "Dodaj", exact: true }).first().click();
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Opublikuj ofertę" }).click();
   await expect(
@@ -117,7 +121,9 @@ test("published job → saved offer/draft → submitted application → employer
   await page.getByRole("link", { name: "Product Designer do automatyzacji", exact: true }).click();
   await page.getByRole("button", { name: "Zapisz ofertę", exact: true }).click();
   await page.getByRole("link", { name: "Aplikuj", exact: true }).click();
-  const answer = page.getByLabel("Dlaczego pasujesz do tej roli?");
+  // Offers with questions replace the single answer with answers pinned to the questions.
+  await expect(page.getByLabel("Dlaczego pasujesz do tej roli?")).toHaveCount(0);
+  const answer = page.getByLabel("Odpowiedź 1", { exact: true });
   const draftAnswer =
     "Przeprowadziłam badania z użytkownikami i wdrożyłam automatyzację. Czas obsługi skrócił się o 30%.";
   await expect(page.getByLabel("Twoje notatki do aplikacji (opcjonalnie)")).toHaveCount(0);
@@ -125,19 +131,19 @@ test("published job → saved offer/draft → submitted application → employer
   await expect(page.getByRole("button", { name: "Użyj propozycji" })).toHaveCount(0);
   await answer.fill(draftAnswer);
   await page.getByRole("button", { name: "Zapisz szkic" }).click();
-  await expect(page.getByRole("status")).toHaveText("Szkic został zapisany.");
+  await expect(page.getByText("Szkic został zapisany.", { exact: true })).toBeVisible();
   expect(
     await page.evaluate((key) => JSON.parse(localStorage.getItem(key)!).drafts.at(-1), STORAGE_KEY),
-  ).toMatchObject({ notes: "", generated: "", answer: draftAnswer });
+  ).toMatchObject({ notes: "", generated: "", answers: [{ text: draftAnswer }] });
   await page.reload();
   await expect(answer).toHaveValue(draftAnswer);
-  await page.getByRole("checkbox").check();
+  await page.getByRole("checkbox", { name: "Zatwierdzam treść i przesłanie aplikacji" }).check();
   await page.getByRole("button", { name: "Wyślij aplikację", exact: true }).click();
   await expect(page.getByText("Aplikacja została wysłana.", { exact: false })).toBeVisible();
   await page.reload();
   await page.getByRole("link", { name: "Product Designer do automatyzacji", exact: true }).click();
   const candidateUrl = page.url();
-  await expect(page.getByText("Match Score: 84%", { exact: true })).toBeVisible();
+  await expect(page.getByText("Asystent: nieocenione", { exact: true })).toBeVisible();
   await choose(page, "Karolina Wiśniewska");
   await page.getByRole("link", { name: "Kandydaci", exact: true }).click();
   await page.getByRole("link", { name: "Anna Kowalska", exact: true }).click();
@@ -530,7 +536,7 @@ test("restored company and public navigation keep their structure across screen 
   await page.setViewportSize({ width: 1440, height: 1000 });
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Dobra robota.");
   await expect(page.getByRole("textbox", { name: "Szukaj ofert", exact: true })).toBeVisible();
-  await expect(page.locator("[data-job-page-summary]")).toHaveText("Oferty 1–6 z 6");
+  await expect(page.locator("[data-job-page-summary]")).toHaveText("Oferty 1–7 z 7");
   await page.screenshot({ path: "artifacts/original-list-layout-desktop.png", fullPage: true });
 });
 
@@ -749,7 +755,7 @@ test("process sheet renders custom snapshots and long content on narrow screens"
 }) => {
   const state = initialState();
   state.activePersonId = "employer-brightlabs";
-  const record = state.applications[0];
+  const record = state.applications.find((a) => a.id === "application-example")!;
   record.candidateName = "Marek Nowak z bardzo długim przykładowym nazwiskiem";
   record.jobTitle =
     "Lider rozwoju produktów i automatyzacji procesów z wykorzystaniem sztucznej inteligencji";
@@ -902,7 +908,7 @@ test("candidate record shares snapshot tabs while excluding employer notes and m
 }) => {
   const state = initialState();
   state.activePersonId = "candidate-marek";
-  const record = state.applications[0];
+  const record = state.applications.find((a) => a.id === "application-example")!;
   record.stage = "reviewed";
   record.events.push({
     stage: "reviewed",
@@ -968,7 +974,7 @@ test("candidate snapshot supports custom CV and long content at desktop and mobi
 }) => {
   const state = initialState();
   state.activePersonId = "candidate-marek";
-  const record = state.applications[0];
+  const record = state.applications.find((a) => a.id === "application-example")!;
   record.jobTitle =
     "Starszy lider rozwoju produktów i automatyzacji z wykorzystaniem sztucznej inteligencji";
   record.cv = "Niestandardowa zapisana treść CV.\n" + "DoświadczenieBezSpacji".repeat(70);
