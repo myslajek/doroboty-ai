@@ -3,7 +3,7 @@ import { Plus, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { requestAssistant } from "./assistant/client";
+import { EXAMPLE_NOTICE, requestAssistant } from "./assistant/client";
 import { AssistantStatus } from "./assistant/status";
 import { MIN_APPLICATION_ANSWER_LENGTH, type Answer, type Requirement } from "./model";
 
@@ -64,7 +64,9 @@ export function AnswersEditor({
       ...g,
       [answer.id]:
         outcome.status === "done"
-          ? outcome.result
+          ? outcome.simulated === "example"
+            ? { ...outcome.result, note: `${EXAMPLE_NOTICE} ${outcome.result.note}` }
+            : outcome.result
           : outcome.status === "offline"
             ? "offline"
             : { gaps: [], note: outcome.message },

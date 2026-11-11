@@ -1,10 +1,23 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import { simulate, type Recording, type SimulatedMatch } from "./simulated";
 /**
- * Klient lokalnego asystenta „co napisać, nie jak”.
- * Przeglądarka → dev-serwer Vite (assistant/vite-plugin.mjs) → pliki w assistant/exchange
- * → watcher `npm run assistant` (claude -p) → odpowiedź. Bez backendu produktowego i bez klucza API.
+ * Klient asystenta „co napisać, nie jak”. Dwa tryby:
+ * - live (`npm run dev`): przeglądarka → dev-serwer Vite (assistant/vite-plugin.mjs) → pliki
+ *   w assistant/exchange → watcher `npm run assistant` (claude -p) → odpowiedź;
+ * - simulated (build statyczny): odtwarza zapisane odpowiedzi modelu z `recordings.json`.
+ * Bez backendu produktowego i bez klucza API. Tryb wymusza `VITE_ASSISTANT_MODE=live|simulated`.
  */
+const configuredMode: unknown = import.meta.env.VITE_ASSISTANT_MODE;
+export const assistantMode: "live" | "simulated" =
+  configuredMode === "live" || configuredMode === "simulated"
+    ? configuredMode
+    : import.meta.env.DEV
+      ? "live"
+      : "simulated";
+/** Dopisek, gdy wersja demonstracyjna pokazała najbliższy zapisany przykład, a nie ocenę tekstu. */
+export const EXAMPLE_NOTICE = "Przykład z wersji demonstracyjnej, a nie ocena tego tekstu.";
+const SIMULATED_DELAY_MS = 400;
 type RequirementInput = { id: string; text: string };
 export const assistantResults = {
   requirements: z.object({
@@ -65,7 +78,7 @@ export type AssistantPayload = {
   } & Partial<CandidateContext>;
 };
 export type AssistantOutcome<K extends AssistantKind> =
-  | { status: "done"; result: AssistantResult<K> }
+  | { status: "done"; result: AssistantResult<K>; simulated?: SimulatedMatch }
   | { status: "offline" }
   | { status: "error"; message: string };
 
@@ -77,7 +90,24 @@ const responseSchema = z.object({
 const POLL_MS = 1000;
 const DEFAULT_TIMEOUT_MS = 120_000;
 
+async function requestSimulated<K extends AssistantKind>(
+  kind: K,
+  payload: AssistantPayload[K],
+): Promise<AssistantOutcome<K>> {
+  try {
+    const recordings = (await import("./recordings.json")).default as Recording[];
+    await new Promise((r) => setTimeout(r, SIMULATED_DELAY_MS));
+    const found = simulate(kind, payload, recordings);
+    const result = found && assistantResults[kind].safeParse(found.result);
+    if (!found || !result?.success)
+      return { status: "error", message: "Wersja demonstracyjna nie ma zapisanej odpowiedzi." };
+    return { status: "done", result: result.data as AssistantResult<K>, simulated: found.match };
+  } catch {
+    return { status: "error", message: "Nie udało się wczytać zapisanych odpowiedzi asystenta." };
+  }
+}
 export async function assistantAlive(signal?: AbortSignal) {
+  if (assistantMode === "simulated") return true;
   try {
     const res = await fetch("/__assistant/status", { signal, cache: "no-store" });
     if (!res.ok) return false;
@@ -95,6 +125,7 @@ export async function requestAssistant<K extends AssistantKind>(
   payload: AssistantPayload[K],
   options: { signal?: AbortSignal; timeoutMs?: number; waitWhenOffline?: boolean } = {},
 ): Promise<AssistantOutcome<K>> {
+  if (assistantMode === "simulated") return requestSimulated(kind, payload);
   const id = crypto.randomUUID();
   const { signal, timeoutMs = DEFAULT_TIMEOUT_MS, waitWhenOffline = false } = options;
   let alive = false;
@@ -134,10 +165,14 @@ export async function requestAssistant<K extends AssistantKind>(
   }
   return { status: "error", message: "Asystent nie odpowiedział w czasie 2 minut." };
 }
-/** Czy watcher działa (odświeżane co 3 s). `null` zanim pierwsze sprawdzenie się skończy. */
+/**
+ * Czy asystent odpowiada: watcher (odświeżane co 3 s; `null` zanim pierwsze sprawdzenie się
+ * skończy) albo zawsze `true` w trybie symulowanym.
+ */
 export function useAssistantAlive() {
-  const [alive, setAlive] = useState<boolean | null>(null);
+  const [alive, setAlive] = useState<boolean | null>(assistantMode === "simulated" ? true : null);
   useEffect(() => {
+    if (assistantMode === "simulated") return;
     const controller = new AbortController();
     let timer = 0;
     const tick = async () => {

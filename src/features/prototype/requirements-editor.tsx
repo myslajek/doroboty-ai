@@ -3,7 +3,7 @@ import { Lightbulb, Plus, Sparkles, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { requestAssistant } from "./assistant/client";
+import { EXAMPLE_NOTICE, requestAssistant } from "./assistant/client";
 import { AssistantStatus } from "./assistant/status";
 import { MAX_REQUIREMENTS, MIN_REQUIREMENTS, type Requirement } from "./model";
 
@@ -51,6 +51,7 @@ export async function assessRequirements(
   const byId = new Map(outcome.result.items.map((item) => [item.id, item]));
   return {
     status: "done" as const,
+    example: outcome.simulated === "example",
     requirements: requirements.map((r) => {
       const item = byId.get(r.id);
       return item
@@ -95,11 +96,10 @@ export function RequirementsEditor({
     if (result.status === "done") {
       onChange(result.requirements);
       const generic = result.requirements.filter((r) => r.assessment?.verdict === "generic").length;
-      setMessage(
-        generic
-          ? `Asystent ocenił: ${generic} z ${filled} to ogólnik. Popraw lub użyj propozycji.`
-          : "Asystent ocenił: wszystkie pytania są konkretne.",
-      );
+      const text = generic
+        ? `Asystent ocenił: ${generic} z ${filled} to ogólnik. Popraw lub użyj propozycji.`
+        : "Asystent ocenił: wszystkie pytania są konkretne.";
+      setMessage("example" in result && result.example ? `${text} ${EXAMPLE_NOTICE}` : text);
     } else if (result.status === "offline")
       setMessage("Asystent wyłączony. Pytania zostaną ocenione po uruchomieniu npm run assistant.");
     else
@@ -120,7 +120,9 @@ export function RequirementsEditor({
       setProposals(outcome.result.items);
       setTips(outcome.result.tips);
       setMessage(
-        `Asystent zaproponował ${outcome.result.items.length} pytania. Dodaj te, które pasują do tej roli, i zmień je swobodnie.`,
+        `Asystent zaproponował ${outcome.result.items.length} pytania. Dodaj te, które pasują do tej roli, i zmień je swobodnie.${
+          outcome.simulated === "example" ? ` ${EXAMPLE_NOTICE}` : ""
+        }`,
       );
     } else if (outcome.status === "offline")
       setMessage("Asystent wyłączony. Uruchom npm run assistant, żeby dostać propozycje.");

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { requestAssistant, useAssistantAlive } from "./assistant/client";
+import { EXAMPLE_NOTICE, requestAssistant, useAssistantAlive } from "./assistant/client";
 import { AssistantStatus } from "./assistant/status";
 import { usePrototype } from "./store";
 import { MatchScore } from "./match-score";
@@ -54,7 +54,10 @@ export async function assessCoverage(
   run({
     type: "coverage",
     applicationId: application.id,
-    summary: outcome.result.summary,
+    summary:
+      outcome.simulated === "example"
+        ? `${EXAMPLE_NOTICE} ${outcome.result.summary}`
+        : outcome.result.summary,
     coverage: outcome.result.items.map((item) => ({
       requirementId: item.requirementId,
       aiPercent: Math.round(item.percent),

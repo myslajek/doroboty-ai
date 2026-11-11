@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 3001 --strictPort",
     "assistant": "node assistant/watch.mjs",
+    "assistant:record": "node scripts/build-assistant-recordings.mjs && prettier --write src/features/prototype/assistant/recordings.json",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 3001 --strictPort",
     "start": "npm run preview",
