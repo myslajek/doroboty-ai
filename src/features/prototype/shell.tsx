@@ -19,6 +19,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { currentPerson } from "./model";
 import { usePrototype } from "./store";
 import { cn } from "@/lib/utils";
+import { SUPPORT_URL } from "@/lib/support";
 const navigation = [
   { to: "/oferty", label: "Oferty" },
   { to: "/metodologia", label: "Metodologia" },
@@ -298,6 +299,9 @@ export function Shell() {
                 <Link to="/oferty">Oferty</Link>
                 <Link to="/metodologia">Metodologia</Link>
                 <Link to="/polityka-prywatnosci">Prywatność</Link>
+                <a href={SUPPORT_URL} target="_blank" rel="noopener noreferrer">
+                  Zgłoś problem<span className="sr-only"> na GitHubie, w nowej karcie</span>
+                </a>
                 <Link className="inline-flex items-center gap-1" to="/auth/sign-in">
                   Strefa case <ArrowUpRight className="size-4" />
                 </Link>

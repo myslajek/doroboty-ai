@@ -1,0 +1,839 @@
+{
+  "job": {
+    "id": "20000000-0000-4000-8000-00000pub3947",
+    "slug": "inzynier-ai-wyszukiwanie-katalog",
+    "companyId": "10000000-0000-4000-8000-000000000001",
+    "title": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+    "summary": "Pierwszy projekt: uporządkowanie danych wejściowych i porównanie dwóch sposobów wyszukiwania w katalogu produktów.",
+    "description": "O roli\nZaczniemy od uporządkowania wejściowych danych i porównania dwóch sposobów wyszukiwania w katalogu produktów. Odpowiadasz za własny komponent, jego ewaluację i utrzymanie. Pozostałe API rozwija drugi inżynier.\n\nJak pracujemy\nMożesz wybierać sposób implementacji w ramach istniejącej usługi; zmiany architektury uzgadniamy z zespołem. Pracujesz z małym zespołem produktu. Dane testowe są dostępne, a dane klientów wymagają zgody właściciela.\n\nProces rekrutacji\nRozmowa z rekruterem, następnie omówienie projektu z managerem.",
+    "category": "build",
+    "function": "engineering",
+    "remoteStatus": "remote",
+    "locations": ["Wrocław"],
+    "coordinates": {
+      "latitude": 51.1079,
+      "longitude": 17.0385
+    },
+    "seniority": "mid",
+    "contract": "employment",
+    "salaryMin": 15000,
+    "salaryMax": 19000,
+    "salaryCurrency": "PLN",
+    "salaryPeriod": "month",
+    "salaryKind": "gross",
+    "publicationStatus": "published",
+    "publishedAt": "2026-06-18T00:00:00.000Z",
+    "expiryAt": "2099-12-31T23:59:59.000Z",
+    "verificationStatus": "employer_verified",
+    "sourceBrief": "Zaczniemy od uporządkowania wejściowych danych i porównania dwóch sposobów wyszukiwania: katalog produktów. Odpowiadasz za własny komponent, ewaluację i jego utrzymanie. Pozostałe API rozwija drugi inżynier.",
+    "requirements": [
+      {
+        "id": "req-1",
+        "text": "Opowiedz o projekcie, w którym sam/a zbudowałeś/aś komponent wyszukiwania nad większym zbiorem danych (np. katalog, dokumenty, baza wiedzy) i dowiozłeś/aś go do użycia. Co należało do Ciebie, a co do innych?",
+        "assessment": {
+          "verdict": "concrete",
+          "note": "Wynika z pierwszego projektu (katalog produktów) i da się na nie odpowiedzieć przykładem z własnej pracy."
+        }
+      },
+      {
+        "id": "req-2",
+        "text": "Opowiedz, jak porównałeś/aś co najmniej dwa sposoby wyszukiwania (np. pełnotekstowe i wektorowe) na własnym zestawie testów i jaką decyzję podjąłeś/ęłaś na podstawie wyniku.",
+        "assessment": {
+          "verdict": "concrete",
+          "note": "Konkretne: wskazuje czynność (porównanie), materiał (zestaw testów) i efekt (decyzja)."
+        }
+      },
+      {
+        "id": "req-3",
+        "text": "Opowiedz o porządkowaniu surowych danych wejściowych przed podłączeniem modelu (deduplikacja, normalizacja, braki): co zrobiłeś/aś sam/a i jaki to miało efekt.",
+        "assessment": {
+          "verdict": "concrete",
+          "note": "Konkretne: nazywa rodzaj pracy na danych, który poprzedza pierwszy projekt."
+        }
+      },
+      {
+        "id": "req-4",
+        "text": "Opowiedz o utrzymaniu komponentu po wdrożeniu dłużej niż kilka tygodni: jak oceniałeś/aś jakość odpowiedzi (metryki, próbki, koszty), co się psuło i jak to obsłużyłeś/aś.",
+        "assessment": {
+          "verdict": "concrete",
+          "note": "Konkretne: odpowiada za ewaluację i utrzymanie z opisu odpowiedzialności."
+        }
+      }
+    ]
+  },
+  "people": [
+    {
+      "id": "fixture-cand-01",
+      "role": "candidate",
+      "name": "Marta Wiśniewska",
+      "headline": "Inżynierka ML · wyszukiwanie",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Marta Wiśniewska\nInżynierka ML · wyszukiwanie\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-030048).",
+      "exampleScore": 82,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-02",
+      "role": "candidate",
+      "name": "Tomasz Bielecki",
+      "headline": "Backend developer · Python",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Tomasz Bielecki\nBackend developer · Python\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-031093).",
+      "exampleScore": 82,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-03",
+      "role": "candidate",
+      "name": "Julia Nowicka",
+      "headline": "Data engineer",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Julia Nowicka\nData engineer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032377).",
+      "exampleScore": 96,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-04",
+      "role": "candidate",
+      "name": "Piotr Kaczmarek",
+      "headline": "Inżynier NLP",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Piotr Kaczmarek\nInżynier NLP\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032659).",
+      "exampleScore": 93,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-05",
+      "role": "candidate",
+      "name": "Agata Zielińska",
+      "headline": "Full-stack · integracje LLM",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Agata Zielińska\nFull-stack · integracje LLM\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-031997).",
+      "exampleScore": 79,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-06",
+      "role": "candidate",
+      "name": "Kamil Dudek",
+      "headline": "Junior AI developer",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Kamil Dudek\nJunior AI developer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032415).",
+      "exampleScore": 94,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-07",
+      "role": "candidate",
+      "name": "Natalia Sowa",
+      "headline": "Analityczka danych",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Natalia Sowa\nAnalityczka danych\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032959).",
+      "exampleScore": 96,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-08",
+      "role": "candidate",
+      "name": "Michał Lis",
+      "headline": "Inżynier MLOps",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Michał Lis\nInżynier MLOps\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-031923).",
+      "exampleScore": 82,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-09",
+      "role": "candidate",
+      "name": "Karolina Mazur",
+      "headline": "Product engineer",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Karolina Mazur\nProduct engineer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-027319).",
+      "exampleScore": 71,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-10",
+      "role": "candidate",
+      "name": "Bartosz Wrona",
+      "headline": "Inżynier oprogramowania",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Bartosz Wrona\nInżynier oprogramowania\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-029358).",
+      "exampleScore": 82,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-11",
+      "role": "candidate",
+      "name": "Ewa Pawlak",
+      "headline": "Data scientist",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Ewa Pawlak\nData scientist\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-030470).",
+      "exampleScore": 79,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-12",
+      "role": "candidate",
+      "name": "Łukasz Górski",
+      "headline": "Backend · Go i Python",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Łukasz Górski\nBackend · Go i Python\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032461).",
+      "exampleScore": 97,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-13",
+      "role": "candidate",
+      "name": "Ola Krawczyk",
+      "headline": "Inżynierka AI",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Ola Krawczyk\nInżynierka AI\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032072).",
+      "exampleScore": 81,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-14",
+      "role": "candidate",
+      "name": "Paweł Sikora",
+      "headline": "Programista · automatyzacje",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Paweł Sikora\nProgramista · automatyzacje\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-028559).",
+      "exampleScore": 60,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-15",
+      "role": "candidate",
+      "name": "Zofia Adamska",
+      "headline": "Inżynierka danych",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Zofia Adamska\nInżynierka danych\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-027182).",
+      "exampleScore": 52,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-16",
+      "role": "candidate",
+      "name": "Jakub Zając",
+      "headline": "Software engineer",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Jakub Zając\nSoftware engineer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-027747).",
+      "exampleScore": 69,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-17",
+      "role": "candidate",
+      "name": "Magda Wójcik",
+      "headline": "Analityczka · ewaluacja modeli",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Magda Wójcik\nAnalityczka · ewaluacja modeli\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-030603).",
+      "exampleScore": 78,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-18",
+      "role": "candidate",
+      "name": "Szymon Król",
+      "headline": "Inżynier wyszukiwania",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Szymon Król\nInżynier wyszukiwania\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-029128).",
+      "exampleScore": 76,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-19",
+      "role": "candidate",
+      "name": "Hanna Baran",
+      "headline": "Inżynierka backend",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Hanna Baran\nInżynierka backend\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-027088).",
+      "exampleScore": 47,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    },
+    {
+      "id": "fixture-cand-20",
+      "role": "candidate",
+      "name": "Rafał Olszewski",
+      "headline": "ML engineer",
+      "bio": "Osoba z danych case'u DoRoboty.ai (fikcyjna).",
+      "location": "Polska",
+      "cv": "Rafał Olszewski\nML engineer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-028080).",
+      "exampleScore": 69,
+      "exampleSummary": "Wynik z czerwca 2026 (przed wymaganiami).",
+      "fixture": true
+    }
+  ],
+  "applications": [
+    {
+      "id": "app-030048",
+      "candidateId": "fixture-cand-01",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Marta Wiśniewska",
+      "cv": "Marta Wiśniewska\nInżynierka ML · wyszukiwanie\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-030048).",
+      "answer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: kontrola dokumentacji. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: kontrola dokumentacji. Przygotowywałem prompty i prezentację; implementację usługi wykonał drugi zespół. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: kontrola dokumentacji. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 82,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-18T09:33:38.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-031093",
+      "candidateId": "fixture-cand-02",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Tomasz Bielecki",
+      "cv": "Tomasz Bielecki\nBackend developer · Python\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-031093).",
+      "answer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: katalog produktów. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: katalog produktów. Przygotowywałem prompty i prezentację; implementację usługi wykonał drugi zespół. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: katalog produktów. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 82,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-18T10:33:35.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-032377",
+      "candidateId": "fixture-cand-03",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Julia Nowicka",
+      "cv": "Julia Nowicka\nData engineer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032377).",
+      "answer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: kontrola dokumentacji. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: kontrola dokumentacji. Zbierałem uwagi do prototypu i porządkowałem przykłady. Nie miałem odpowiedzialności za utrzymanie. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: kontrola dokumentacji. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 96,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-19T02:24:41.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-032659",
+      "candidateId": "fixture-cand-04",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Piotr Kaczmarek",
+      "cv": "Piotr Kaczmarek\nInżynier NLP\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032659).",
+      "answer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: kontrola dokumentacji. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: kontrola dokumentacji. Prowadziłem demo dla użytkowników. Kod komponentu i testy powstały po stronie inżynierów. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: kontrola dokumentacji. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 93,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-19T10:58:16.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-031997",
+      "candidateId": "fixture-cand-05",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Agata Zielińska",
+      "cv": "Agata Zielińska\nFull-stack · integracje LLM\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-031997).",
+      "answer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: planowanie dostaw. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: planowanie dostaw. Utrzymywałem komponent przetwarzania i przygotowałem scenariusze ewaluacji. Zespół decydował o produkcie. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: planowanie dostaw. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 79,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-19T11:13:19.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-032415",
+      "candidateId": "fixture-cand-06",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Kamil Dudek",
+      "cv": "Kamil Dudek\nJunior AI developer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032415).",
+      "answer": "W dotychczasowych projektach rozwijałem umiejętności potrzebne do wdrożeń AI, w tym w obszarze: kontrola dokumentacji. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: kontrola dokumentacji. Przygotowywałem prompty i prezentację; implementację usługi wykonał drugi zespół. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "W dotychczasowych projektach rozwijałem umiejętności potrzebne do wdrożeń AI, w tym w obszarze: kontrola dokumentacji. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 94,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-19T15:54:55.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-032959",
+      "candidateId": "fixture-cand-07",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Natalia Sowa",
+      "cv": "Natalia Sowa\nAnalityczka danych\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032959).",
+      "answer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: katalog produktów. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: katalog produktów. Zbierałem uwagi do prototypu i porządkowałem przykłady. Nie miałem odpowiedzialności za utrzymanie. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: katalog produktów. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 96,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-20T04:53:22.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-031923",
+      "candidateId": "fixture-cand-08",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Michał Lis",
+      "cv": "Michał Lis\nInżynier MLOps\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-031923).",
+      "answer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: planowanie dostaw. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: planowanie dostaw. Mój zakres obejmował kod indeksowania i zestaw testów. API pisała inna osoba. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: planowanie dostaw. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 82,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-20T09:00:30.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-027319",
+      "candidateId": "fixture-cand-09",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Karolina Mazur",
+      "cv": "Karolina Mazur\nProduct engineer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-027319).",
+      "answer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: dokumenty operacyjne. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: dokumenty operacyjne. Prowadziłem demo dla użytkowników. Kod komponentu i testy powstały po stronie inżynierów. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: dokumenty operacyjne. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 71,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-20T16:36:23.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-029358",
+      "candidateId": "fixture-cand-10",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Bartosz Wrona",
+      "cv": "Bartosz Wrona\nInżynier oprogramowania\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-029358).",
+      "answer": "W dotychczasowych projektach rozwijałem umiejętności potrzebne do wdrożeń AI, w tym w obszarze: katalog produktów. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: katalog produktów. Mój zakres obejmował kod indeksowania i zestaw testów. API pisała inna osoba. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "W dotychczasowych projektach rozwijałem umiejętności potrzebne do wdrożeń AI, w tym w obszarze: katalog produktów. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 82,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-20T17:12:05.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-030470",
+      "candidateId": "fixture-cand-11",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Ewa Pawlak",
+      "cv": "Ewa Pawlak\nData scientist\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-030470).",
+      "answer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: dokumenty operacyjne. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o projekt z obszaru: dokumenty operacyjne. Mój zakres obejmował kod indeksowania i zestaw testów. API pisała inna osoba. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: dokumenty operacyjne. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 79,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-21T02:22:54.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-032461",
+      "candidateId": "fixture-cand-12",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Łukasz Górski",
+      "cv": "Łukasz Górski\nBackend · Go i Python\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032461).",
+      "answer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: dokumenty operacyjne. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "sourceNotes": "Chodzi o proejkt z obszaru: dokumenty operacyjne. Mój zakres obejmował kod indeksowania i zestaw testów. API pisała inna osoba. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "generatedAnswer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: dokumenty operacyjne. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "score": 97,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-21T09:52:55.000Z",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "app-032072",
+      "candidateId": "fixture-cand-13",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Ola Krawczyk",
+      "cv": "Ola Krawczyk\nInżynierka AI\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-032072).",
+      "answer": "Projekt: wyszukiwarka części zamiennych w B2B (Elkom, 03.2024–obecnie). Sam zaprojektowałem i napisałem komponent hybrydowy (BM25 + embeddingi) nad katalogiem 180 tys. pozycji, wdrożyłem go jako osobną usługę i utrzymuję do dziś: po wdrożeniu zmierzyłem, że 14% zapytań bez wyniku spadło do 3%. Koszty embeddingów obniżyłem o połowę, przechodząc na cache i mniejszy model.\n\nW tym samym projekcie porównałem trzy warianty (pełnotekstowy, wektorowy, hybrydowy) na zestawie 400 zapytań z logów, które sam oznaczyłem z działem sprzedaży. Hybrydowy wygrał o 11 punktów recall@10 i to był mój argument za wdrożeniem.\n\nPrzed podłączeniem modelu scaliłem trzy źródła danych o produktach, usunąłem ok. 9 tys. duplikatów po numerze katalogowym i znormalizowałem jednostki (mm/cal, kg/g). Skrypt migracji pisałem sam, reguły uzgadniałem z osobą od katalogu.",
+      "sourceNotes": "",
+      "generatedAnswer": "",
+      "score": 81,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-19T07:09:56.000Z",
+          "note": ""
+        }
+      ],
+      "answers": [
+        {
+          "id": "ans-13-1",
+          "text": "Projekt: wyszukiwarka części zamiennych w B2B (Elkom, 03.2024–obecnie). Sam zaprojektowałem i napisałem komponent hybrydowy (BM25 + embeddingi) nad katalogiem 180 tys. pozycji, wdrożyłem go jako osobną usługę i utrzymuję do dziś: po wdrożeniu zmierzyłem, że 14% zapytań bez wyniku spadło do 3%. Koszty embeddingów obniżyłem o połowę, przechodząc na cache i mniejszy model.",
+          "requirementIds": ["req-1", "req-4"]
+        },
+        {
+          "id": "ans-13-2",
+          "text": "W tym samym projekcie porównałem trzy warianty (pełnotekstowy, wektorowy, hybrydowy) na zestawie 400 zapytań z logów, które sam oznaczyłem z działem sprzedaży. Hybrydowy wygrał o 11 punktów recall@10 i to był mój argument za wdrożeniem.",
+          "requirementIds": ["req-2"]
+        },
+        {
+          "id": "ans-13-3",
+          "text": "Przed podłączeniem modelu scaliłem trzy źródła danych o produktach, usunąłem ok. 9 tys. duplikatów po numerze katalogowym i znormalizowałem jednostki (mm/cal, kg/g). Skrypt migracji pisałem sam, reguły uzgadniałem z osobą od katalogu.",
+          "requirementIds": ["req-3"]
+        }
+      ]
+    },
+    {
+      "id": "app-028559",
+      "candidateId": "fixture-cand-14",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Paweł Sikora",
+      "cv": "Paweł Sikora\nProgramista · automatyzacje\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-028559).",
+      "answer": "Projekt: baza wiedzy zespołu wsparcia (Ritmo, 10.2024–06.2025). Napisałem komponent wyszukiwania semantycznego nad 6 tys. artykułów i wdrożyłem go w Slacku zespołu; po zakończeniu umowy utrzymanie przejął inny zespół.\n\nArtykuły miały zdublowane wersje i różne formaty nagłówków. Sam napisałem czyszczenie: usuwanie starych wersji po dacie, podział na sekcje, wyciąganie metadanych z tytułów.",
+      "sourceNotes": "",
+      "generatedAnswer": "",
+      "score": 60,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-19T11:05:53.000Z",
+          "note": ""
+        }
+      ],
+      "answers": [
+        {
+          "id": "ans-14-1",
+          "text": "Projekt: baza wiedzy zespołu wsparcia (Ritmo, 10.2024–06.2025). Napisałem komponent wyszukiwania semantycznego nad 6 tys. artykułów i wdrożyłem go w Slacku zespołu; po zakończeniu umowy utrzymanie przejął inny zespół.",
+          "requirementIds": ["req-1"]
+        },
+        {
+          "id": "ans-14-2",
+          "text": "Artykuły miały zdublowane wersje i różne formaty nagłówków. Sam napisałem czyszczenie: usuwanie starych wersji po dacie, podział na sekcje, wyciąganie metadanych z tytułów.",
+          "requirementIds": ["req-3"]
+        }
+      ]
+    },
+    {
+      "id": "app-027182",
+      "candidateId": "fixture-cand-15",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Zofia Adamska",
+      "cv": "Zofia Adamska\nInżynierka danych\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-027182).",
+      "answer": "Uczestniczyłem w projekcie kontroli dokumentacji z wykorzystaniem AI. Zespół zbudował wyszukiwanie i porównywał podejścia, a ja sprawdzałem gotowe odpowiedzi i opisywałem przypadki testowe. Znam cały proces od danych po utrzymanie.",
+      "sourceNotes": "",
+      "generatedAnswer": "",
+      "score": 52,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-20T11:52:06.000Z",
+          "note": ""
+        }
+      ],
+      "answers": [
+        {
+          "id": "ans-15-1",
+          "text": "Uczestniczyłem w projekcie kontroli dokumentacji z wykorzystaniem AI. Zespół zbudował wyszukiwanie i porównywał podejścia, a ja sprawdzałem gotowe odpowiedzi i opisywałem przypadki testowe. Znam cały proces od danych po utrzymanie.",
+          "requirementIds": ["req-1", "req-2", "req-3", "req-4"]
+        }
+      ]
+    },
+    {
+      "id": "app-027747",
+      "candidateId": "fixture-cand-16",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Jakub Zając",
+      "cv": "Jakub Zając\nSoftware engineer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-027747).",
+      "answer": "Projekt: wyszukiwarka w katalogu produktów sklepu z elektroniką (Volt24, 01.2023–obecnie). Przejąłem komponent po poprzedniku i od dwóch lat odpowiadam za niego sam: prowadzę ewaluację na próbce 200 zapytań co miesiąc, pilnuję kosztów API (budżet 1,2 tys. zł/mies.) i wdrażam poprawki.\n\nPorównywałem nowy model embeddingów ze starym na tym samym zestawie testów. Zestaw testów odziedziczyłem, nie budowałem go sam.",
+      "sourceNotes": "",
+      "generatedAnswer": "",
+      "score": 69,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-21T23:43:37.000Z",
+          "note": ""
+        }
+      ],
+      "answers": [
+        {
+          "id": "ans-16-1",
+          "text": "Projekt: wyszukiwarka w katalogu produktów sklepu z elektroniką (Volt24, 01.2023–obecnie). Przejąłem komponent po poprzedniku i od dwóch lat odpowiadam za niego sam: prowadzę ewaluację na próbce 200 zapytań co miesiąc, pilnuję kosztów API (budżet 1,2 tys. zł/mies.) i wdrażam poprawki.",
+          "requirementIds": ["req-1", "req-4"]
+        },
+        {
+          "id": "ans-16-2",
+          "text": "Porównywałem nowy model embeddingów ze starym na tym samym zestawie testów. Zestaw testów odziedziczyłem, nie budowałem go sam.",
+          "requirementIds": ["req-2"]
+        }
+      ]
+    },
+    {
+      "id": "app-030603",
+      "candidateId": "fixture-cand-17",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Magda Wójcik",
+      "cv": "Magda Wójcik\nAnalityczka · ewaluacja modeli\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-030603).",
+      "answer": "Prowadziłem demo wyszukiwarki dokumentów dla użytkowników biznesowych i zbierałem ich uwagi. Kod komponentu i testy powstały po stronie inżynierów, ja przekazywałem im wymagania i omawiałem wyniki na spotkaniach.",
+      "sourceNotes": "",
+      "generatedAnswer": "",
+      "score": 78,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-22T02:33:01.000Z",
+          "note": ""
+        }
+      ],
+      "answers": [
+        {
+          "id": "ans-17-1",
+          "text": "Prowadziłem demo wyszukiwarki dokumentów dla użytkowników biznesowych i zbierałem ich uwagi. Kod komponentu i testy powstały po stronie inżynierów, ja przekazywałem im wymagania i omawiałem wyniki na spotkaniach.",
+          "requirementIds": ["req-1", "req-2", "req-3", "req-4"]
+        }
+      ]
+    },
+    {
+      "id": "app-029128",
+      "candidateId": "fixture-cand-18",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Szymon Król",
+      "cv": "Szymon Król\nInżynier wyszukiwania\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-029128).",
+      "answer": "Projekt: wyszukiwanie w wiedzy zespołu (Nordia, 02.2025–09.2025). Zbudowałam zestaw 150 pytań z odpowiedziami od zespołu i porównałam na nim wyszukiwanie pełnotekstowe (Postgres) z wektorowym (pgvector). Wektorowe wygrało tylko przy pytaniach opisowych, więc zaproponowałam wariant z przełącznikiem po typie pytania i zespół to przyjął.\n\nDane wejściowe to były notatki ze spotkań w trzech formatach. Napisałam parser, który je ujednolica i odrzuca puste lub zdublowane wpisy; reguły deduplikacji dobierałam ręcznie na próbce.",
+      "sourceNotes": "",
+      "generatedAnswer": "",
+      "score": 76,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-22T05:10:36.000Z",
+          "note": ""
+        }
+      ],
+      "answers": [
+        {
+          "id": "ans-18-1",
+          "text": "Projekt: wyszukiwanie w wiedzy zespołu (Nordia, 02.2025–09.2025). Zbudowałam zestaw 150 pytań z odpowiedziami od zespołu i porównałam na nim wyszukiwanie pełnotekstowe (Postgres) z wektorowym (pgvector). Wektorowe wygrało tylko przy pytaniach opisowych, więc zaproponowałam wariant z przełącznikiem po typie pytania i zespół to przyjął.",
+          "requirementIds": ["req-2"]
+        },
+        {
+          "id": "ans-18-2",
+          "text": "Dane wejściowe to były notatki ze spotkań w trzech formatach. Napisałam parser, który je ujednolica i odrzuca puste lub zdublowane wpisy; reguły deduplikacji dobierałam ręcznie na próbce.",
+          "requirementIds": ["req-3"]
+        }
+      ]
+    },
+    {
+      "id": "app-027088",
+      "candidateId": "fixture-cand-19",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Hanna Baran",
+      "cv": "Hanna Baran\nInżynierka backend\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-027088).",
+      "answer": "Projekt: wyszukiwarka w katalogu produktów hurtowni (Dystrybucja Plus, 06.2024–obecnie). Odpowiadałem za integrację modelu z istniejącą usługą katalogową: sam napisałem warstwę zapytań i indeksowania, wdrożyłem ją i utrzymuję.\n\nPo wdrożeniu porównałem wyniki modelu z wyszukiwaniem pełnotekstowym na zapytaniach z logów i na tej podstawie zostawiłem oba (model tylko dla długich zapytań). Co tydzień analizuję błędne odpowiedzi z próbki 50 zapytań i poprawiam reguły; nie prowadziłem całego projektu, architekturę ustalał lead.",
+      "sourceNotes": "",
+      "generatedAnswer": "",
+      "score": 47,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-22T07:15:23.000Z",
+          "note": ""
+        }
+      ],
+      "answers": [
+        {
+          "id": "ans-19-1",
+          "text": "Projekt: wyszukiwarka w katalogu produktów hurtowni (Dystrybucja Plus, 06.2024–obecnie). Odpowiadałem za integrację modelu z istniejącą usługą katalogową: sam napisałem warstwę zapytań i indeksowania, wdrożyłem ją i utrzymuję.",
+          "requirementIds": ["req-1"]
+        },
+        {
+          "id": "ans-19-2",
+          "text": "Po wdrożeniu porównałem wyniki modelu z wyszukiwaniem pełnotekstowym na zapytaniach z logów i na tej podstawie zostawiłem oba (model tylko dla długich zapytań). Co tydzień analizuję błędne odpowiedzi z próbki 50 zapytań i poprawiam reguły; nie prowadziłem całego projektu, architekturę ustalał lead.",
+          "requirementIds": ["req-2", "req-4"]
+        }
+      ]
+    },
+    {
+      "id": "app-028080",
+      "candidateId": "fixture-cand-20",
+      "jobId": "20000000-0000-4000-8000-00000pub3947",
+      "companyId": "10000000-0000-4000-8000-000000000001",
+      "jobTitle": "Inżynier/ka AI: wyszukiwanie w katalogu produktów",
+      "candidateName": "Rafał Olszewski",
+      "cv": "Rafał Olszewski\nML engineer\n\nDoświadczenie i projekty opisane w aplikacji. CV przykładowe, fikcyjne (prototyp, dane z case'u app-028080).",
+      "answer": "Projekt: kontrola dokumentacji technicznej (Sigma Doc, 09.2023–05.2025). Sam przygotowałem moduł wyszukiwania oraz testy porównawcze dwóch indeksów (Elasticsearch i FAISS) na 300 zapytaniach od inżynierów; wybraliśmy Elasticsearch ze względu na koszt i prostsze utrzymanie, co uzasadniłem w notatce dla zespołu.\n\nDane czyścił zespół danych, ja ustaliłem z nimi format wejściowy.",
+      "sourceNotes": "",
+      "generatedAnswer": "",
+      "score": 69,
+      "summary": "Match Score z czerwca 2026, sprzed wymagań. Ocena zgodności tekstów, nie szansa zatrudnienia.",
+      "stage": "submitted",
+      "events": [
+        {
+          "stage": "submitted",
+          "at": "2026-06-23T06:09:00.000Z",
+          "note": ""
+        }
+      ],
+      "answers": [
+        {
+          "id": "ans-20-1",
+          "text": "Projekt: kontrola dokumentacji technicznej (Sigma Doc, 09.2023–05.2025). Sam przygotowałem moduł wyszukiwania oraz testy porównawcze dwóch indeksów (Elasticsearch i FAISS) na 300 zapytaniach od inżynierów; wybraliśmy Elasticsearch ze względu na koszt i prostsze utrzymanie, co uzasadniłem w notatce dla zespołu.",
+          "requirementIds": ["req-1", "req-2"]
+        },
+        {
+          "id": "ans-20-2",
+          "text": "Dane czyścił zespół danych, ja ustaliłem z nimi format wejściowy.",
+          "requirementIds": ["req-3"]
+        }
+      ]
+    }
+  ]
+}

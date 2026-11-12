@@ -1042,3 +1042,264 @@ code {
     padding: var(--gui-space-m);
   }
 }
+
+/* Wymagania ogłoszenia (prototyp idea-1): edytor pracodawcy i lista dla kandydata */
+.requirements-editor {
+  display: grid;
+  gap: 12px;
+  padding-block: 8px;
+}
+.requirements-editor h2 {
+  margin: 0;
+}
+.requirements-list {
+  display: grid;
+  gap: 14px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.requirement-row {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--foreground);
+  border-radius: 18px;
+}
+.requirement-row[data-verdict="generic"] {
+  background: var(--gui-error-transparent);
+}
+.requirement-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.requirement-head > [data-slot="button"] {
+  margin-left: auto;
+}
+.requirement-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--foreground);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.requirement-assessment {
+  display: grid;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--gui-text-muted);
+}
+.requirement-suggestion {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--foreground);
+  color: var(--gui-text);
+}
+.job-requirements {
+  margin-top: 24px;
+}
+.job-requirements h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.job-requirements ol {
+  display: grid;
+  gap: 8px;
+  padding-left: 22px;
+  list-style: decimal;
+}
+.job-requirements[data-compact] {
+  margin-top: 16px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.job-requirements[data-compact] h3 {
+  font-size: 14px;
+}
+
+/* Odpowiedzi kandydata do wymagań */
+.answers-editor {
+  display: grid;
+  gap: 14px;
+}
+.job-requirements-ref {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.job-requirements-ref li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.job-requirements-ref li[data-covered] .requirement-number {
+  background: var(--foreground);
+  color: #fff;
+}
+.answer-requirements {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.answer-requirements legend {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.answer-requirements label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+.answer-requirements[aria-invalid] {
+  outline: 2px solid var(--gui-error);
+  outline-offset: 6px;
+  border-radius: 6px;
+}
+.requirement-assessment ul {
+  display: grid;
+  gap: 4px;
+  padding-left: 18px;
+  list-style: disc;
+}
+
+/* Pokrycie wymagań u rekrutera */
+.coverage-score[data-pending] {
+  background: var(--gui-surface-muted);
+}
+.match-score[data-pending] {
+  background: var(--gui-surface-muted);
+}
+.coverage-panel {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.coverage-panel h2 {
+  font-size: 26px;
+  margin: 0;
+}
+.coverage-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.coverage-row {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--foreground);
+  border-radius: 18px;
+}
+.coverage-row[data-verdict="covers"] {
+  background: var(--gui-match-green);
+}
+.coverage-row[data-verdict="not"] {
+  background: var(--gui-surface-muted);
+}
+.coverage-requirement {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.coverage-ai {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--gui-text-muted);
+}
+.coverage-ai ul {
+  padding-left: 18px;
+  list-style: disc;
+}
+.coverage-verdict {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.answers-view {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.consistency[data-consistency="consistent"] {
+  background: var(--gui-match-green);
+}
+.consistency[data-consistency="conflict"] {
+  background: var(--gui-match-orange);
+}
+.consistency[data-consistency="unknown"] {
+  background: var(--gui-surface-muted);
+}
+
+/* Pytania do kandydata: baner i propozycje asystenta */
+.requirements-tips {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.requirements-tips ul {
+  display: grid;
+  gap: 4px;
+  padding-left: 18px;
+  list-style: disc;
+}
+.requirements-proposals {
+  display: grid;
+  gap: 10px;
+}
+.requirements-proposals h3 {
+  font-size: 18px;
+  margin: 0;
+}
+.requirements-proposals ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.requirements-proposals li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 1px dashed var(--foreground);
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.requirements-proposals li > div {
+  display: grid;
+  gap: 4px;
+}

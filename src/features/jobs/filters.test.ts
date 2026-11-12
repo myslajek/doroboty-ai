@@ -41,7 +41,9 @@ describe("job filters", () => {
 
   it("filters deterministic jobs by taxonomy and text", () => {
     const items = joinJobsWithCompanies();
-    expect(filterJobs(items, { category: "build", page: 1 })).toHaveLength(2);
+    expect(filterJobs(items, { category: "build", page: 1 })).toHaveLength(
+      items.filter((job) => job.category === "build").length,
+    );
     expect(filterJobs(items, { query: "northstar", page: 1 }).map((job) => job.slug)).toEqual([
       "staff-ai-engineer",
       "growth-lead-ai-products",

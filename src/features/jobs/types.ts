@@ -38,6 +38,12 @@ export type Company = {
   logoUrl?: string;
 };
 
+export type JobRequirement = {
+  id: string;
+  text: string;
+  assessment?: { verdict: "concrete" | "generic"; note: string; suggestion?: string };
+};
+
 export type Job = {
   id: string;
   slug: string;
@@ -61,6 +67,8 @@ export type Job = {
   publishedAt: string;
   expiryAt: string;
   verificationStatus: "unverified" | "editorial" | "employer_verified";
+  /** Tylko nowe ogłoszenia (od listopada 2026): 3–5 wymagań z przykładem kandydata. */
+  requirements?: JobRequirement[];
 };
 
 export type JobWithCompany = Job & { company: Company };

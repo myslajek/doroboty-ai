@@ -4,7 +4,8 @@ import { ProcessTimeline } from "@/components/process-timeline";
 import { RecordSheet } from "@/components/record-sheet";
 import { CvAttachment } from "./cv-attachment";
 import { MatchScore } from "./match-score";
-import { stageLabels, type Application, type Stage } from "./model";
+import { AnswersView } from "./coverage-panel";
+import { stageLabels, type Application, type Requirement, type Stage } from "./model";
 
 type RecordEvent = { stage: Stage; at: string; note?: string };
 const dateFormat = new Intl.DateTimeFormat("pl-PL", {
@@ -15,6 +16,8 @@ const dateFormat = new Intl.DateTimeFormat("pl-PL", {
 /** Role controllers authorize the record and project the history before rendering. */
 export function ApplicationRecord({
   application,
+  requirements = [],
+  score,
   companyName,
   audience,
   history,
@@ -22,10 +25,11 @@ export function ApplicationRecord({
   children,
   footer,
 }: {
-  application: Pick<
-    Application,
-    "candidateId" | "candidateName" | "jobTitle" | "stage" | "answer" | "cv" | "score" | "summary"
-  >;
+  application: Application;
+  /** Wymagania oferty; z nimi odpowiedzi są pokazane per wymaganie. */
+  requirements?: Requirement[];
+  /** Zastępuje Match Score w nagłówku (np. pokrycie wymagań). */
+  score?: ReactNode;
   companyName: string;
   audience: "candidate" | "employer";
   history: RecordEvent[];
@@ -55,7 +59,7 @@ export function ApplicationRecord({
           <span className="record-stage" tabIndex={-1} ref={statusRef}>
             {stageLabels[application.stage]}
           </span>
-          <MatchScore score={application.score} />
+          {score ?? <MatchScore score={application.score} />}
           {submitted && (
             <span>
               Złożona:{" "}
@@ -74,7 +78,7 @@ export function ApplicationRecord({
               content: (
                 <>
                   <h3>Przesłana aplikacja</h3>
-                  <p>{application.answer}</p>
+                  <AnswersView application={application} requirements={requirements} />
                 </>
               ),
             },

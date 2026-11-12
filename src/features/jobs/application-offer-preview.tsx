@@ -1,6 +1,7 @@
 import { ChevronDown, MapPin } from "lucide-react";
 import { CompanyLogo } from "./company-logo";
 import { JobDescription } from "./job-description";
+import { JobRequirements } from "./job-requirements";
 import { SalaryFact } from "./salary-fact";
 import { categoryLabels, remoteLabels, seniorityLabels } from "./presentation";
 import type { JobWithCompany } from "./types";
@@ -36,6 +37,7 @@ export function ApplicationOfferPreview({ job }: { job: JobWithCompany }) {
         </div>
       </dl>
       <p className="application-offer-summary">{job.summary}</p>
+      <JobRequirements requirements={job.requirements} compact />
       <details className="application-description">
         <summary>
           Pełny opis oferty

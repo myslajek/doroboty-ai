@@ -13,9 +13,11 @@ import { usePrototype } from "./store";
 import { currentPerson, publishedJobs, stageLabels, MIN_APPLICATION_ANSWER_LENGTH } from "./model";
 import { PageTitle, Empty, NotFound, Notice } from "./shell";
 import { CvAttachment } from "./cv-attachment";
-import { MatchScore } from "./match-score";
 import { RecruitingApplication } from "./recruiting-application";
 import { CandidateApplication } from "./candidate-application";
+import { AnswersEditor, finalizeAnswers, newAnswer, uncoveredRequirements } from "./answers-editor";
+import { assessCoverage, CoverageScore } from "./coverage-panel";
+import { coverageSummary } from "./model";
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -31,10 +33,11 @@ export function PersonPicker() {
   const [params] = useSearchParams();
   const next = params.get("next");
   const audience = params.get("audience");
+  const visible = state.people.filter((person) => !person.fixture);
   const people =
     audience === "candidate" || audience === "employer"
-      ? state.people.filter((person) => person.role === audience)
-      : state.people;
+      ? visible.filter((person) => person.role === audience)
+      : visible;
   const safeNext = next && /^\/(?!\/)/.test(next) && !next.startsWith("/auth") ? next : null;
   return (
     <section className="prototype-section max-w-4xl">
@@ -239,6 +242,12 @@ export function ApplyPage() {
   const notes = draft?.notes ?? "";
   const generated = draft?.generated ?? "";
   const [answer, setAnswer] = useState(draft?.answer ?? "");
+  const requirements = job?.requirements ?? [];
+  const [answers, setAnswers] = useState(() =>
+    draft?.answers?.length
+      ? draft.answers.map((a) => ({ ...a, requirementIds: a.requirementIds ?? [] }))
+      : [newAnswer(requirements.map((r) => r.id))],
+  );
   const [consent, setConsent] = useState(false);
   const [message, setMessage] = useState("");
   const [attempted, setAttempted] = useState(false);
@@ -253,8 +262,12 @@ export function ApplyPage() {
     const timeout = window.setTimeout(() => navigate("/app/aplikacje?wyslano=1"), delay);
     return () => window.clearTimeout(timeout);
   }, [submitted, navigate]);
-  const answerLength = answer.trim().length;
-  const answerInvalid = attempted && answerLength < MIN_APPLICATION_ANSWER_LENGTH;
+  const withRequirements = requirements.length > 0;
+  const answerLength = withRequirements
+    ? finalizeAnswers(answers).reduce((n, a) => n + a.text.length, 0)
+    : answer.trim().length;
+  const answerInvalid =
+    !withRequirements && attempted && answerLength < MIN_APPLICATION_ANSWER_LENGTH;
   const consentInvalid = attempted && !consent;
   if (!job) return <NotFound />;
   const existing = state.applications.find(
@@ -273,7 +286,24 @@ export function ApplyPage() {
     e.preventDefault();
     if (submittedOnce.current) return;
     setAttempted(true);
-    if (answerLength < MIN_APPLICATION_ANSWER_LENGTH) {
+    if (withRequirements) {
+      const ready = finalizeAnswers(answers);
+      if (
+        !ready.length ||
+        answers.some(
+          (a) =>
+            a.text.trim().length < MIN_APPLICATION_ANSWER_LENGTH || a.requirementIds.length === 0,
+        ) ||
+        uncoveredRequirements(requirements, answers).length
+      ) {
+        document
+          .querySelector<HTMLElement>(
+            ".answers-editor [aria-invalid], .answers-editor [role=alert]",
+          )
+          ?.focus();
+        return;
+      }
+    } else if (answerLength < MIN_APPLICATION_ANSWER_LENGTH) {
       answerInput.current?.focus();
       return;
     }
@@ -281,7 +311,18 @@ export function ApplyPage() {
       document.getElementById("application-consent")?.focus();
       return;
     }
-    if (run({ type: "submit", jobId: job!.id, notes, generated, answer, consent })) {
+    const ready = withRequirements ? finalizeAnswers(answers) : undefined;
+    if (
+      run({
+        type: "submit",
+        jobId: job!.id,
+        notes,
+        generated,
+        answer: ready ? ready.map((a) => a.text).join("\n\n") : answer,
+        consent,
+        answers: ready,
+      })
+    ) {
       submittedOnce.current = true;
       setSubmitted(true);
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -322,36 +363,50 @@ export function ApplyPage() {
               contextLabel="CV z Twojego profilu"
             />
           </section>
-          <section
-            className="application-form-section application-answer"
-            aria-label="Odpowiedź do aplikacji"
-          >
-            <Field label="Dlaczego pasujesz do tej roli?">
-              <Textarea
-                disabled={submitted}
-                ref={answerInput}
-                required
-                minLength={MIN_APPLICATION_ANSWER_LENGTH}
-                maxLength={12000}
-                aria-invalid={answerInvalid || undefined}
-                aria-describedby="application-answer-help"
-                value={answer}
-                onChange={(e) => {
-                  setAnswer(e.target.value);
-                  setConsent(false);
-                }}
-              />
-            </Field>
-            <p
-              id="application-answer-help"
-              role={answerInvalid ? "alert" : undefined}
-              className={answerInvalid ? "error-message" : "text-sm text-muted-foreground"}
+          {withRequirements ? (
+            <AnswersEditor
+              requirements={requirements}
+              value={answers}
+              onChange={(next) => {
+                setAnswers(next);
+                setConsent(false);
+              }}
+              disabled={submitted}
+              attempted={attempted}
+              candidate={{ headline: person.headline, bio: person.bio, cv: person.cv }}
+            />
+          ) : (
+            <section
+              className="application-form-section application-answer"
+              aria-label="Odpowiedź do aplikacji"
             >
-              {answerInvalid
-                ? `Odpowiedź jest za krótka. Wpisz co najmniej ${MIN_APPLICATION_ANSWER_LENGTH} znaków (obecnie: ${answerLength}).`
-                : `Minimum ${MIN_APPLICATION_ANSWER_LENGTH} znaków. Obecnie: ${answerLength}.`}
-            </p>
-          </section>
+              <Field label="Dlaczego pasujesz do tej roli?">
+                <Textarea
+                  disabled={submitted}
+                  ref={answerInput}
+                  required
+                  minLength={MIN_APPLICATION_ANSWER_LENGTH}
+                  maxLength={12000}
+                  aria-invalid={answerInvalid || undefined}
+                  aria-describedby="application-answer-help"
+                  value={answer}
+                  onChange={(e) => {
+                    setAnswer(e.target.value);
+                    setConsent(false);
+                  }}
+                />
+              </Field>
+              <p
+                id="application-answer-help"
+                role={answerInvalid ? "alert" : undefined}
+                className={answerInvalid ? "error-message" : "text-sm text-muted-foreground"}
+              >
+                {answerInvalid
+                  ? `Odpowiedź jest za krótka. Wpisz co najmniej ${MIN_APPLICATION_ANSWER_LENGTH} znaków (obecnie: ${answerLength}).`
+                  : `Minimum ${MIN_APPLICATION_ANSWER_LENGTH} znaków. Obecnie: ${answerLength}.`}
+              </p>
+            </section>
+          )}
           <div className="application-form-section application-submit">
             <label className="application-consent">
               <Checkbox
@@ -387,7 +442,16 @@ export function ApplyPage() {
                 disabled={submitted}
                 variant="outline"
                 onClick={() => {
-                  if (run({ type: "draft", jobId: job.id, notes, generated, answer }))
+                  if (
+                    run({
+                      type: "draft",
+                      jobId: job.id,
+                      notes,
+                      generated,
+                      answer,
+                      answers: withRequirements ? answers : undefined,
+                    })
+                  )
                     setMessage("Szkic został zapisany.");
                 }}
               >
@@ -411,17 +475,44 @@ export function ApplyPage() {
   );
 }
 export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
-  const { state } = usePrototype();
+  const { state, run } = usePrototype();
   const person = currentPerson(state)!;
   const [query, setQuery] = useState("");
+  const [batch, setBatch] = useState("");
   const [params] = useSearchParams();
-  const applications = state.applications.filter(
-    (x) =>
-      (employer ? x.companyId === person.companyId : x.candidateId === person.id) &&
-      `${x.candidateName} ${x.jobTitle}`
-        .toLocaleLowerCase("pl")
-        .includes(query.toLocaleLowerCase("pl")),
-  );
+  const jobs = new Map(state.jobs.map((job) => [job.id, job]));
+  const rank = (a: (typeof state.applications)[number]) => {
+    const s = coverageSummary(a, jobs.get(a.jobId));
+    return s ? [1, s.confirmed, s.averagePercent ?? -1] : [0, 0, a.score];
+  };
+  const applications = state.applications
+    .filter(
+      (x) =>
+        (employer ? x.companyId === person.companyId : x.candidateId === person.id) &&
+        `${x.candidateName} ${x.jobTitle}`
+          .toLocaleLowerCase("pl")
+          .includes(query.toLocaleLowerCase("pl")),
+    )
+    .sort((a, b) => {
+      const [ra, rb] = [rank(a), rank(b)];
+      for (let i = 0; i < ra.length; i++) if (ra[i] !== rb[i]) return rb[i] - ra[i];
+      return 0;
+    });
+  const unassessed = employer
+    ? applications.filter((a) => coverageSummary(a, jobs.get(a.jobId))?.pending)
+    : [];
+  async function assessAll() {
+    setBatch(`Asystent ocenia ${unassessed.length} aplikacji…`);
+    const results = await Promise.all(
+      unassessed.map((a) => assessCoverage(a, jobs.get(a.jobId)!, run, state.people)),
+    );
+    const done = results.filter((r) => r === "done").length;
+    setBatch(
+      results.includes("offline")
+        ? "Asystent wyłączony. Włącz npm run assistant, a żądania z kolejki zostaną ocenione."
+        : `Asystent ocenił ${done} z ${unassessed.length} aplikacji.`,
+    );
+  }
   return (
     <>
       <PageTitle>{employer ? "Kandydaci" : "Moje aplikacje"}</PageTitle>
@@ -433,6 +524,23 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
       <Field label={employer ? "Szukaj kandydata lub oferty" : "Szukaj oferty"}>
         <Input value={query} onChange={(e) => setQuery(e.target.value)} />
       </Field>
+      {employer && (
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={!unassessed.length || batch.startsWith("Asystent ocenia")}
+            onClick={assessAll}
+          >
+            Oceń odpowiedzi z asystentem ({unassessed.length})
+          </Button>
+          <p role="status" className="record-caption">
+            {batch ||
+              "Lista: najpierw aplikacje na oferty z pytaniami, wg Twoich werdyktów i propozycji asystenta."}
+          </p>
+        </div>
+      )}
       <div className="mt-6 space-y-4">
         {applications.length ? (
           applications.map((a) => (
@@ -452,9 +560,11 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
                   </p>
                   <p>{stageLabels[a.stage]}</p>
                 </div>
-                <MatchScore score={a.score} />
+                <CoverageScore application={a} job={jobs.get(a.jobId)} />
               </div>
-              {employer && <p className="mt-4 text-muted-foreground">{a.summary}</p>}
+              {employer && !jobs.get(a.jobId)?.requirements?.length && (
+                <p className="mt-4 text-muted-foreground">{a.summary}</p>
+              )}
             </article>
           ))
         ) : (

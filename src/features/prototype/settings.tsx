@@ -4,6 +4,7 @@ import { ConfirmDialog } from "@/components/confirm-dialog";
 import { usePrototype } from "./store";
 import { serializeState, MAX_IMPORT_BYTES } from "./storage";
 import { PageTitle } from "./shell";
+import { SUPPORT_URL } from "@/lib/support";
 
 export function downloadText(name: string, text: string, type = "application/json") {
   const url = URL.createObjectURL(new Blob([text], { type }));
@@ -131,6 +132,18 @@ export function PrivacyPage() {
         <p>
           Możesz usunąć zmiany przyciskiem „Resetuj scenariusz” w ustawieniach lub wyczyścić dane
           witryny w przeglądarce. Hosting może prowadzić własne logi dostępu.
+        </p>
+        <p>
+          Problem z działaniem strony zgłosisz w{" "}
+          <a
+            className="font-medium text-[var(--gui-link)] hover:underline"
+            href={SUPPORT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            zgłoszeniach projektu na GitHubie
+          </a>
+          . Opisz, co było na ekranie i co zostało kliknięte; nie wklejaj prawdziwych danych.
         </p>
       </div>
     </section>

@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 3001 --strictPort",
+    "assistant": "node assistant/watch.mjs",
+    "assistant:record": "node scripts/build-assistant-recordings.mjs && prettier --write src/features/prototype/assistant/recordings.json",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 3001 --strictPort",
     "start": "npm run preview",
@@ -14,6 +16,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "smoke": "node scripts/smoke-deployed.mjs",
     "check": "npm run format:check && npm run design-system:check && npm run lint && npm run typecheck && npm test && npm run verify:packet && npm run build && npm run test:e2e",
     "package:participant": "node scripts/package-participant.mjs",
     "verify:packet": "node scripts/verify-participant.mjs",
@@ -53,7 +56,7 @@
     "globals": "^16.0.0"
   },
   "engines": {
-    "node": ">=24 <27"
+    "node": "24.x"
   },
   "type": "module"
 }

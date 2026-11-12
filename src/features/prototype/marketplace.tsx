@@ -13,6 +13,7 @@ import { JobCard } from "@/features/jobs/job-card";
 import { JobFiltersForm } from "@/features/jobs/job-filters";
 import { JobPagination } from "@/features/jobs/job-pagination";
 import { JobDescription } from "@/features/jobs/job-description";
+import { JobRequirements } from "@/features/jobs/job-requirements";
 import { filterJobs, parseJobFilters } from "@/features/jobs/filters";
 import { paginateJobs, jobListingHref } from "@/features/jobs/pagination";
 import {
@@ -459,6 +460,7 @@ export function JobPage() {
             <section id="role" tabIndex={-1} className="pp-offer-section">
               <h2>O roli</h2>
               <JobDescription description={job.description} />
+              <JobRequirements requirements={job.requirements} />
             </section>
           </div>
         </div>

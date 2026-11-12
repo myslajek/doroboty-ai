@@ -5,5 +5,8 @@ playwright-report*
 test-results
 artifacts
 
+# Generated offline report (production-readiness skill); never hand-edited.
+docs/production-readiness.html
+
 # Preserve the versioned reference byte-for-byte; checked by its own scripts.
 docs/design-system/agent-kit/
