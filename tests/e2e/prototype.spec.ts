@@ -1001,3 +1001,42 @@ test("candidate snapshot supports custom CV and long content at desktop and mobi
     record.answer,
   );
 });
+
+test("unexpected render error shows the recovery screen instead of a blank page", async ({
+  page,
+}) => {
+  // The footer renders the current year; breaking it simulates an unforeseen render error.
+  await page.addInitScript(() => {
+    Date.prototype.getFullYear = () => {
+      throw new Error("Błąd testowy ekranu awaryjnego");
+    };
+  });
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: "Coś poszło nie tak", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Odśwież stronę", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /^Zgłoś problem/ })).toHaveAttribute(
+    "href",
+    "https://github.com/myslajek/doroboty-ai/issues",
+  );
+});
+
+test("footer and privacy page name the problem reporting channel", async ({ page }) => {
+  await page.goto("/");
+  await expect(
+    page.getByRole("navigation", { name: "Stopka" }).getByRole("link", { name: /^Zgłoś problem/ }),
+  ).toHaveAttribute("href", "https://github.com/myslajek/doroboty-ai/issues");
+  await page.goto("/#/polityka-prywatnosci");
+  await expect(
+    page.getByRole("link", { name: "zgłoszeniach projektu na GitHubie", exact: true }),
+  ).toHaveAttribute("href", "https://github.com/myslajek/doroboty-ai/issues");
+});
+
+test("static preview does not expose the assistant bridge", async ({ request }) => {
+  const response = await request.post("/__assistant/request", {
+    data: { id: "bridge-must-stay-dev-only", kind: "gaps", payload: {} },
+  });
+  expect(response.status()).not.toBe(202);
+  expect((await response.text()).includes("queued")).toBe(false);
+});

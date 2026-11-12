@@ -6,7 +6,7 @@ The local assistant (REQ-04) exists only behind the dev-server bridge, so in a s
 
 ## Acceptance criteria
 
-- Static build makes no `/__assistant/*` request; `npm run dev` keeps the live watcher bridge. `VITE_ASSISTANT_MODE=live|simulated` overrides the default.
+- Static build makes no `/__assistant/*` request; `npm run dev` keeps the live watcher bridge (dev server only; the preview server has no bridge). `VITE_ASSISTANT_MODE=live|simulated` overrides the default.
 - The 20 fixture applications get the recorded model answer for the current questions (exact text match).
 - Any other text gets the closest recorded example and the UI states that it is an example, not an assessment of that text.
 - The status line names the demonstration mode. No secret, key or model call in the browser.

@@ -1,4 +1,4 @@
-// Most dev-serwera: przeglądarka → pliki w assistant/exchange → watcher (claude -p) → odpowiedź.
+// Most tylko dla `npm run dev` (nie dla podglądu buildu ani wersji opublikowanej): przeglądarka → pliki w assistant/exchange → watcher (claude -p) → odpowiedź.
 import { mkdir, readFile, writeFile, rename } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -69,9 +69,6 @@ export function assistantBridge() {
   return {
     name: "doroboty-assistant-bridge",
     configureServer(server) {
-      server.middlewares.use(middleware);
-    },
-    configurePreviewServer(server) {
       server.middlewares.use(middleware);
     },
   };
