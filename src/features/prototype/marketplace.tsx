@@ -1,5 +1,6 @@
 import { Link, useLocation, useParams, useSearchParams } from "react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import posthog from "posthog-js";
 import { ArrowUpRight, Users, MapPin, BriefcaseBusiness, Bookmark } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Search, ArrowRight, Monitor, X } from "lucide-react";
@@ -27,6 +28,8 @@ import { usePrototype } from "./store";
 import { currentPerson, publishedJobs } from "./model";
 import { NotFound } from "./shell";
 import { cn } from "@/lib/utils";
+
+const posthogToken = import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN;
 
 function LocalMap({ jobs }: { jobs: JobWithCompany[] }) {
   const [selected, setSelected] = useState<string | null>(null);
@@ -431,7 +434,13 @@ export function JobPage() {
                     variant="outline"
                     aria-label="Zapisz ofertę"
                     aria-pressed={saved}
-                    onClick={() => run({ type: "toggle_saved", jobId: job.id })}
+                    onClick={() => {
+                      if (run({ type: "toggle_saved", jobId: job.id }) && posthogToken)
+                        posthog.capture("job_saved", {
+                          action: saved ? "removed" : "saved",
+                          job_category: job.category,
+                        });
+                    }}
                   >
                     <Bookmark className={cn(saved && "fill-current")} />
                     Zapisz ofertę

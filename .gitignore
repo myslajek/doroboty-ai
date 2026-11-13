@@ -9,3 +9,4 @@ artifacts/
 .env*
 npm-debug.log*
 assistant/exchange/
+.env
