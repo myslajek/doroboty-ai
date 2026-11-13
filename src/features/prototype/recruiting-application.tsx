@@ -1,10 +1,13 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ApplicationRecord } from "./application-record";
 import { CoveragePanel, CoverageScore } from "./coverage-panel";
 import { nextStages, stageLabels, type Application } from "./model";
 import { usePrototype } from "./store";
+
+const posthogToken = import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN;
 
 export function RecruitingApplication({ application }: { application: Application }) {
   const { state, run } = usePrototype();
@@ -45,6 +48,11 @@ export function RecruitingApplication({ application }: { application: Applicatio
                     variant={stage === "rejected" ? "outline" : "default"}
                     onClick={() => {
                       if (run({ type: "stage", applicationId: application.id, stage, note })) {
+                        if (posthogToken)
+                          posthog.capture("application_stage_changed", {
+                            stage,
+                            has_note: Boolean(note.trim()),
+                          });
                         setNote("");
                         setAnnouncement(`Zapisano etap: ${stageLabels[stage]}.`);
                         pendingFocus.current = true;

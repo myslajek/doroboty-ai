@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import posthog from "posthog-js";
 import { Link, useNavigate, useParams } from "react-router";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,8 @@ import { assessRequirements, newRequirement, RequirementsEditor } from "./requir
 import { usePrototype } from "./store";
 import { Field } from "./workspace";
 import { Empty, NotFound, PageTitle } from "./shell";
+
+const posthogToken = import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN;
 
 export function EmployerJobs() {
   const { state } = usePrototype();
@@ -173,7 +176,15 @@ export function EmployerJobEditor() {
       );
       return;
     }
-    if (run({ type: "publish", job: parsed.data })) navigate("/app/oferty");
+    if (run({ type: "publish", job: parsed.data })) {
+      if (posthogToken)
+        posthog.capture("job_published", {
+          publication_type: existing ? "updated" : "created",
+          requirement_count: list.length,
+          job_category: parsed.data.category,
+        });
+      navigate("/app/oferty");
+    }
   }
   return (
     <>

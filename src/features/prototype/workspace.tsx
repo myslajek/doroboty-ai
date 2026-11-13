@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import posthog from "posthog-js";
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from "react-router";
 import { CheckCircle2, FileText } from "lucide-react";
 import { ConfettiBurst, type ConfettiOrigin } from "@/components/confetti-burst";
@@ -18,6 +19,9 @@ import { CandidateApplication } from "./candidate-application";
 import { AnswersEditor, finalizeAnswers, newAnswer, uncoveredRequirements } from "./answers-editor";
 import { assessCoverage, CoverageScore } from "./coverage-panel";
 import { coverageSummary } from "./model";
+
+const posthogToken = import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN;
+const posthogLog = posthog.logger;
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -159,8 +163,13 @@ export function ProfilePage({ preview = false }: { preview?: boolean }) {
           location: String(data.get("location")),
         },
       })
-    )
+    ) {
+      if (posthogToken) {
+        posthog.capture("profile_saved");
+        posthogLog.info("candidate profile saved", { workflow: "candidate_profile" });
+      }
       setMessage("Profil został zapisany.");
+    }
   }
   return (
     <>
@@ -323,6 +332,18 @@ export function ApplyPage() {
         answers: ready,
       })
     ) {
+      if (posthogToken) {
+        posthog.capture("application_submitted", {
+          has_requirements: withRequirements,
+          answer_count: ready?.length ?? 1,
+          job_category: job!.category,
+        });
+        posthogLog.info("candidate application submitted", {
+          has_requirements: withRequirements,
+          answer_count: ready?.length ?? 1,
+          job_category: job!.category,
+        });
+      }
       submittedOnce.current = true;
       setSubmitted(true);
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -451,8 +472,21 @@ export function ApplyPage() {
                       answer,
                       answers: withRequirements ? answers : undefined,
                     })
-                  )
+                  ) {
+                    if (posthogToken) {
+                      posthog.capture("application_draft_saved", {
+                        has_requirements: withRequirements,
+                        answer_count: withRequirements ? answers.length : 1,
+                        job_category: job.category,
+                      });
+                      posthogLog.info("candidate application draft saved", {
+                        has_requirements: withRequirements,
+                        answer_count: withRequirements ? answers.length : 1,
+                        job_category: job.category,
+                      });
+                    }
                     setMessage("Szkic został zapisany.");
+                  }
                 }}
               >
                 Zapisz szkic

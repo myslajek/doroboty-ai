@@ -1,9 +1,12 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { ApplicationRecord } from "./application-record";
 import { CoverageScore } from "./coverage-panel";
 import type { Application } from "./model";
 import { usePrototype } from "./store";
+
+const posthogToken = import.meta.env.VITE_PUBLIC_POSTHOG_PROJECT_TOKEN;
 
 export function CandidateApplication({ application }: { application: Application }) {
   const { state, run } = usePrototype();
@@ -49,6 +52,7 @@ export function CandidateApplication({ application }: { application: Application
                   variant="destructive"
                   onClick={() => {
                     if (run({ type: "withdraw", applicationId: application.id })) {
+                      if (posthogToken) posthog.capture("application_withdrawn");
                       focusAfter.current = "status";
                       setConfirming(false);
                       setAnnouncement("Aplikacja została wycofana.");
